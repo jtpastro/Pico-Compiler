@@ -18,7 +18,7 @@ Node *create_node(int nl, Node_type t,
     if (newNode != NULL) {
         /* inicializa os campos do nodo criado */
         newNode->num_line = nl;
-        if (t < code_node || t > ne_node) {
+        if (t < code_node || t > print_node) {
             exit(EXIT_FAILURE); // termina se o Node_type nao eh valido
         } else {
             newNode->type = t;

@@ -70,6 +70,8 @@ end    { return( END ); }
 true   { return( TRUE ); }
 false  { return( FALSE ); }
 
+"print" { return( PRINTF ); }
+
  /** Expressoes regulares dos outros tokens. */
 [ \t\n]+
 [a-z_]({letra}|{digito}|_)* {

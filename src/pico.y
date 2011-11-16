@@ -39,6 +39,8 @@
 %token TRUE
 %token FALSE
 
+%token PRINTF
+
 %token<cadeia> IDF
 %token CONST
 %token STR_LIT
@@ -236,6 +238,12 @@ enunciado: expr { $$ = $1; }
                                                    $$ = create_node(@1.first_line, enunciado_node, NULL, whileNode, lParNode, $3, rParNode,
                                                        lBraceNode, $6, rBraceNode, NULL);
                                                }
+         | PRINTF '(' expr ')' {
+                                   Node *printNode = create_node(@1.first_line, print_node, "print", NULL);
+                                   Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
+                                   Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                   $$ = create_node(@1.first_line, enunciado_node, NULL, printNode, lParNode, $3, rParNode, NULL);
+                               }
          ;
 
 fiminstcontrole: END { $$ = create_node(@1.first_line, end_node, "end", NULL); }

@@ -70,6 +70,7 @@ typedef int Node_type;
 #define ge_node              349
 #define eq_node              350
 #define ne_node              351
+#define print_node           352
 
 /** Estrutura de dados parcial para o no da arvore.
  *
