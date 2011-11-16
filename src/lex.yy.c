@@ -169,7 +169,20 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    #define YY_LESS_LINENO(n)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex. 
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -516,6 +529,13 @@ static yyconst flex_int16_t yy_chk[185] =
       100,  100,  100,  100
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static yyconst flex_int32_t yy_rule_can_match_eol[47] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    0, 0, 0, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -541,17 +561,15 @@ char *yytext;
 */
 /* Secao das declaracoes */
 /* Sera copiado no .c final */
-#line 15 "scanner.l"
+#line 17 "scanner.l"
     #include <stdlib.h>
     #include <string.h>
    
     /** Inclui a definicao dos tokens */
     #include "tokens.h"
-
-    int VAL_INT;
-    double VAL_DOUBLE;
+    #define YY_USER_ACTION yylloc.first_line = yylineno;
 /* Definicoes regulares */
-#line 555 "lex.yy.c"
+#line 573 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -744,7 +762,7 @@ YY_DECL
  /* Secao das Regras de traducao */
  /** Expressoes regulares dos Tokens simples. */
 
-#line 748 "lex.yy.c"
+#line 766 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -815,6 +833,16 @@ yy_find_action:
 			}
 
 		YY_DO_BEFORE_ACTION;
+
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					   
+    yylineno++;
+;
+			}
 
 do_action:	/* This label is used only to access EOF actions. */
 
@@ -1022,48 +1050,60 @@ case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
 #line 74 "scanner.l"
-{ printf("SPACE"); }
+
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 75 "scanner.l"
-{ printf("%s", yytext); return( IDF ); }
+{
+                                yylval.cadeia = (char *) malloc((strlen(yytext)+1)*sizeof(char));
+                                strcpy(yylval.cadeia, yytext);
+                                return( IDF );
+                            }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 76 "scanner.l"
-{ printf("%s", yytext); return( CONST ); }
+#line 80 "scanner.l"
+{ return( CONST ); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 77 "scanner.l"
-{ printf("%s", yytext); return( STR_LIT ); }
+#line 81 "scanner.l"
+{ return( STR_LIT ); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 78 "scanner.l"
-{ VAL_INT = atoi(yytext); return( INT_LIT ); }
+#line 82 "scanner.l"
+{
+                                yylval.cadeia = (char *) malloc((strlen(yytext)+1)*sizeof(char));
+                                strcpy(yylval.cadeia, yytext);
+                                return( INT_LIT );
+                            }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 79 "scanner.l"
-{ VAL_DOUBLE = atof(yytext); return( F_LIT ); }
+#line 87 "scanner.l"
+{
+                                              yylval.cadeia = (char *) malloc((strlen(yytext)+1)*sizeof(char));
+                                              strcpy(yylval.cadeia, yytext);
+                                              return( F_LIT );
+                                          }
 	YY_BREAK
 /* Tratamento dos erros lexicais: a regra seguinte pega tudo o que nao
    * fechou com uma Regexp anterior.
    */
 case 45:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 96 "scanner.l"
 { printf("Erro lexical - caractere nao reconhecido: %c.\n", yytext[0]);
     exit(-1); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 86 "scanner.l"
+#line 98 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1067 "lex.yy.c"
+#line 1107 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1424,6 +1464,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1498,6 +1542,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		   
+    yylineno++;
+;
 
 	return c;
 }
@@ -1969,6 +2018,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = 0;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2061,54 +2113,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "scanner.l"
+#line 98 "scanner.l"
 
 
  /* Secao dos  Procedimentos auxiliares */
 
- /*
-  * Para redefinir a entrada padrao do LEX. 
-  * Redefinir a variavel 'yyin' para ler de um arquivo. Por exemplo:
-  *  yyin = fopen("Meu_programa.c", "r");
-  * ira mandar ler o programa a ser compilado pelo analisador lexical
-  * em 'Meu_programa.c'.
-  * O default eh ler da entrada standard (o teclado).
-  */
-
-
-extern FILE *yyin;
-
- /**
-  * main
-  * \brief Função principal do analisador lexical.
-  * Redefine a entrada padrao do (F)lex para ler de um arquivo.
-  * \param[in] argc Conta o numero de parametros da linha de comando.
-  * \param[in] argv Vetor de parametros, onde o segundo elemento eh o nome do arquivo de entrada.
-  * \return Nada.
-  */
-int main(int argc, char* argv[]) {
-   int token;
-   if (argc != 2) {
-     printf("uso: %s <input_file>. Try again!\n", argv[0]);
-     exit(-1);
-   }
-   yyin = fopen(argv[1], "r");
-   if (!yyin) {
-     printf("Uso: %s <input_file>. Could not find %s. Try again!\n", 
-         argv[0], argv[1]);
-     exit(-1);
-   }
-  /* agora a entrada padrao eh o arquivo especificado como 1o argumento ao
-   * executavel (argv[1]).
-   * Soh chama o analisador lexical default fornecido pelo output do Flex:
-   */
-  while (token=yylex()) { 
-     /* neste laco, obtem-se "palavra por palavra" os tokens reconhecidos
-      * pelo scanner fornecido pelo Lex. Poderia ser feita a analise
-      * sintatica... Sera feito depois!
-      */
-     printf("Meu analisador lexical reconheceu o token %d\n", token);
-  }
-  return(0);
-}
 

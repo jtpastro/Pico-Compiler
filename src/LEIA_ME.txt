@@ -1,0 +1,10 @@
+1) Substituir o arquivo 'scanner.l' encontrado nessa pasta pelo seu scanner.l
+da etapa 1.
+
+2) Na versão de 'scanner.l' que você acabou de atualizar, tirar o main() (o
+mais simples é renomear o 'main' por outra coisa, por exemplo 'old_main').
+
+3) O arquivo exemplo_func_var_arg.c contém um exemplo de código C que
+implementa uma função com número variável de argumentos. Será necessário fazer
+isso para implementar o construtor de um nó (ver node.h).
+
