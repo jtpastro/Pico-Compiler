@@ -1,0 +1,321 @@
+\hypertarget{node_8h}{
+\section{Referência do Arquivo node.h}
+\label{node_8h}\index{node.h@{node.h}}
+}
+{\tt \#include $<$stdio.h$>$}\par
+\subsection*{Estruturas de Dados}
+\begin{CompactItemize}
+\item 
+struct \textbf{\_\-node}
+\end{CompactItemize}
+\subsection*{Definições e Macros}
+\begin{CompactItemize}
+\item 
+\hypertarget{node_8h_77663608c57a6c6bccce7cc1eb6e5737}{
+\#define \textbf{program\_\-node}~299}
+\label{node_8h_77663608c57a6c6bccce7cc1eb6e5737}
+
+\item 
+\hypertarget{node_8h_5d974d0c2ec32bd9933661a7474f5c57}{
+\#define \textbf{idf\_\-node}~300}
+\label{node_8h_5d974d0c2ec32bd9933661a7474f5c57}
+
+\item 
+\hypertarget{node_8h_67e292cf5f04350986fe0675101308cd}{
+\#define \textbf{int\_\-node}~301}
+\label{node_8h_67e292cf5f04350986fe0675101308cd}
+
+\item 
+\hypertarget{node_8h_9ab1f2880dcb6639a547348f8dc98a0a}{
+\#define \textbf{float\_\-node}~302}
+\label{node_8h_9ab1f2880dcb6639a547348f8dc98a0a}
+
+\item 
+\hypertarget{node_8h_2cd909a26c99bbfb1dab02161a739c53}{
+\#define \textbf{str\_\-node}~303}
+\label{node_8h_2cd909a26c99bbfb1dab02161a739c53}
+
+\item 
+\hypertarget{node_8h_3ed10796e3da4ffd23204cd01ae10374}{
+\#define \textbf{empty\_\-node}~304}
+\label{node_8h_3ed10796e3da4ffd23204cd01ae10374}
+
+\item 
+\hypertarget{node_8h_423824216872d1ea72b3976fc1dc0a73}{
+\#define \textbf{proc\_\-node}~305}
+\label{node_8h_423824216872d1ea72b3976fc1dc0a73}
+
+\item 
+\hypertarget{node_8h_19ac93e328ac2bbd0b63f6a8a430011b}{
+\#define \textbf{param\_\-node}~306}
+\label{node_8h_19ac93e328ac2bbd0b63f6a8a430011b}
+
+\item 
+\hypertarget{node_8h_062fcc439b4dcbc110a17171f71d1a03}{
+\#define \textbf{decl\_\-node}~307}
+\label{node_8h_062fcc439b4dcbc110a17171f71d1a03}
+
+\item 
+\hypertarget{node_8h_9e77cc4e7f46140473a2a5d1b4c58359}{
+\#define \textbf{decl\_\-list\_\-node}~308}
+\label{node_8h_9e77cc4e7f46140473a2a5d1b4c58359}
+
+\item 
+\hypertarget{node_8h_27ae5cdeee879f935b8232113a3f760d}{
+\#define \textbf{op\_\-node}~309}
+\label{node_8h_27ae5cdeee879f935b8232113a3f760d}
+
+\item 
+\hypertarget{node_8h_3a842fa575aacc27e03827bdb782703f}{
+\#define \textbf{nop\_\-node}~310}
+\label{node_8h_3a842fa575aacc27e03827bdb782703f}
+
+\item 
+\hypertarget{node_8h_57eec8c987f8be000104fc7b08df4afc}{
+\#define \textbf{return\_\-node}~311}
+\label{node_8h_57eec8c987f8be000104fc7b08df4afc}
+
+\item 
+\hypertarget{node_8h_2dab7cbe494f35e640da0e077b9f0685}{
+\#define \textbf{if\_\-node}~312}
+\label{node_8h_2dab7cbe494f35e640da0e077b9f0685}
+
+\item 
+\hypertarget{node_8h_d4d3428de48de24ccc233212049c05a3}{
+\#define \textbf{while\_\-node}~313}
+\label{node_8h_d4d3428de48de24ccc233212049c05a3}
+
+\item 
+\hypertarget{node_8h_f88692762da864603da2070b33628cc1}{
+\#define \textbf{print\_\-node}~314}
+\label{node_8h_f88692762da864603da2070b33628cc1}
+
+\item 
+\hypertarget{node_8h_a436873b24791df71e151d6e74e911e8}{
+\#define \textbf{cond\_\-node}~315}
+\label{node_8h_a436873b24791df71e151d6e74e911e8}
+
+\item 
+\hypertarget{node_8h_0363cacbed847105974b777dc3426d5b}{
+\#define \textbf{affect\_\-node}~316}
+\label{node_8h_0363cacbed847105974b777dc3426d5b}
+
+\item 
+\hypertarget{node_8h_282ea317ff8cab292e72e3652681cd1f}{
+\#define \textbf{or\_\-node}~317}
+\label{node_8h_282ea317ff8cab292e72e3652681cd1f}
+
+\item 
+\hypertarget{node_8h_f5b6419be5645dddb4dc934531a01c29}{
+\#define \textbf{and\_\-node}~318}
+\label{node_8h_f5b6419be5645dddb4dc934531a01c29}
+
+\item 
+\hypertarget{node_8h_dd397b31f2f3e546b3d57a15cdb3f438}{
+\#define \textbf{eq\_\-node}~319}
+\label{node_8h_dd397b31f2f3e546b3d57a15cdb3f438}
+
+\item 
+\hypertarget{node_8h_b5c106e4627d7fd14a95a97d443122ee}{
+\#define \textbf{neq\_\-node}~320}
+\label{node_8h_b5c106e4627d7fd14a95a97d443122ee}
+
+\item 
+\hypertarget{node_8h_7b4d686d101a4db3abcaeac75796c8b7}{
+\#define \textbf{inf\_\-node}~321}
+\label{node_8h_7b4d686d101a4db3abcaeac75796c8b7}
+
+\item 
+\hypertarget{node_8h_7d6a6248f712e9ac8a3263438e34778f}{
+\#define \textbf{sup\_\-node}~322}
+\label{node_8h_7d6a6248f712e9ac8a3263438e34778f}
+
+\item 
+\hypertarget{node_8h_5d651064e57a61682c02f2204cdfa1c7}{
+\#define \textbf{inf\_\-eq\_\-node}~323}
+\label{node_8h_5d651064e57a61682c02f2204cdfa1c7}
+
+\item 
+\hypertarget{node_8h_0f297da211b05c77ace5ad0ff8d6c039}{
+\#define \textbf{sup\_\-eq\_\-node}~324}
+\label{node_8h_0f297da211b05c77ace5ad0ff8d6c039}
+
+\item 
+\hypertarget{node_8h_b1fe89425687d9fc2f8411abe7b9540e}{
+\#define \textbf{plus\_\-node}~325}
+\label{node_8h_b1fe89425687d9fc2f8411abe7b9540e}
+
+\item 
+\hypertarget{node_8h_d2c79259353a3c28378d14ae8e763424}{
+\#define \textbf{minus\_\-node}~326}
+\label{node_8h_d2c79259353a3c28378d14ae8e763424}
+
+\item 
+\hypertarget{node_8h_855a3e1da645b4722fb52cabab89e8b3}{
+\#define \textbf{mult\_\-node}~327}
+\label{node_8h_855a3e1da645b4722fb52cabab89e8b3}
+
+\item 
+\hypertarget{node_8h_81a2aaf9ccf52caac6f04ed53df03350}{
+\#define \textbf{div\_\-node}~328}
+\label{node_8h_81a2aaf9ccf52caac6f04ed53df03350}
+
+\item 
+\hypertarget{node_8h_8a25303f040b4f05ba38008486f8b992}{
+\#define \textbf{mod\_\-node}~329}
+\label{node_8h_8a25303f040b4f05ba38008486f8b992}
+
+\item 
+\hypertarget{node_8h_41429490adac54538956b6b398bcc495}{
+\#define \textbf{umenos\_\-node}~330}
+\label{node_8h_41429490adac54538956b6b398bcc495}
+
+\item 
+\hypertarget{node_8h_4b7dfce1aa463da2bd452ae3d0830f5c}{
+\#define \textbf{not\_\-node}~331}
+\label{node_8h_4b7dfce1aa463da2bd452ae3d0830f5c}
+
+\item 
+\hypertarget{node_8h_e3434f24eef5efc81d626ded20c0756a}{
+\#define \textbf{char\_\-node}~332}
+\label{node_8h_e3434f24eef5efc81d626ded20c0756a}
+
+\item 
+\hypertarget{node_8h_eeb8ab178d3de274b70a6430d31311eb}{
+\#define \textbf{bloc\_\-node}~333}
+\label{node_8h_eeb8ab178d3de274b70a6430d31311eb}
+
+\item 
+\hypertarget{node_8h_f451f8b8b1350c4f78920c1b2be3c58f}{
+\#define \textbf{true\_\-node}~335}
+\label{node_8h_f451f8b8b1350c4f78920c1b2be3c58f}
+
+\item 
+\hypertarget{node_8h_4416611236a7abad08a9455bf7ef0445}{
+\#define \textbf{false\_\-node}~336}
+\label{node_8h_4416611236a7abad08a9455bf7ef0445}
+
+\item 
+\#define \hyperlink{node_8h_09a8473c6902dc780c5056f2df196911}{MAX\_\-CHILDREN\_\-NUMBER}~10
+\end{CompactItemize}
+\subsection*{Definições de Tipos}
+\begin{CompactItemize}
+\item 
+\hypertarget{node_8h_f78666e6cb576ec864360f78107a356a}{
+typedef int \textbf{Node\_\-type}}
+\label{node_8h_f78666e6cb576ec864360f78107a356a}
+
+\item 
+\hypertarget{node_8h_6390a1d02010dee1843fa2b1263308c1}{
+typedef struct \_\-node \textbf{Node}}
+\label{node_8h_6390a1d02010dee1843fa2b1263308c1}
+
+\end{CompactItemize}
+\subsection*{Funções}
+\begin{CompactItemize}
+\item 
+Node $\ast$ \hyperlink{node_8h_3bf702618dee6354751e95c9c0f800c9}{create\_\-node} (int nl, Node\_\-type t, char $\ast$lexema, void $\ast$att, int nbc, Node $\ast$$\ast$children)
+\item 
+Node $\ast$ \hyperlink{node_8h_c796e8a6c8fa6a58d06f7094152816bb}{create\_\-leaf} (int nl, Node\_\-type t, char $\ast$lexema, void $\ast$att)
+\item 
+int \hyperlink{node_8h_a7faef607e574100e30b08bb3b00fe0d}{nb\_\-of\_\-children} (Node $\ast$n)
+\item 
+Node $\ast$ \hyperlink{node_8h_e033a5706b5c6d0058874e04c9a7c180}{child} (Node $\ast$n, int i)
+\item 
+int \hyperlink{node_8h_1e1a21ca62ad4d35baa0bf0694e5a241}{pack\_\-nodes} (Node $\ast$$\ast$$\ast$array\_\-of\_\-nodes, int cur\_\-size, Node $\ast$n)
+\item 
+int \hyperlink{node_8h_58649350a2079d8c22fdf5b005a82bf2}{deep\_\-free\_\-node} (Node $\ast$n)
+\item 
+int \hyperlink{node_8h_4af6752a1b7e972b6b108010956f41b2}{height} (Node $\ast$n)
+\end{CompactItemize}
+
+
+\subsection{Descrição Detalhada}
+\begin{Desc}
+\item[Versão:]1.1 \end{Desc}
+
+
+\subsection{Definições e macros}
+\hypertarget{node_8h_09a8473c6902dc780c5056f2df196911}{
+\index{node.h@{node.h}!MAX\_\-CHILDREN\_\-NUMBER@{MAX\_\-CHILDREN\_\-NUMBER}}
+\index{MAX\_\-CHILDREN\_\-NUMBER@{MAX\_\-CHILDREN\_\-NUMBER}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}\#define MAX\_\-CHILDREN\_\-NUMBER~10}}
+\label{node_8h_09a8473c6902dc780c5056f2df196911}
+
+
+Estrutura de dados parcial para o no da arvore. Trata-se de uma arvore generalizada: qualquer no pode ter de 0 ateh MAX\_\-CHILDREN\_\-NUMBER filhos. 
+
+\subsection{Funções}
+\hypertarget{node_8h_e033a5706b5c6d0058874e04c9a7c180}{
+\index{node.h@{node.h}!child@{child}}
+\index{child@{child}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Node$\ast$ child (Node $\ast$ {\em n}, \/  int {\em i})}}
+\label{node_8h_e033a5706b5c6d0058874e04c9a7c180}
+
+
+accessor to the i'th child of a Node. \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em n}]: the node to be consulted. Must return en error if 'n' is NULL. \item[{\em i}]: the number of the child that one wants. Must be strictly lower than n-$>$num\_\-children and larger than 0. Must return an error if i is not correct. \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]a pointer on a Node. \end{Desc}
+\hypertarget{node_8h_c796e8a6c8fa6a58d06f7094152816bb}{
+\index{node.h@{node.h}!create\_\-leaf@{create\_\-leaf}}
+\index{create\_\-leaf@{create\_\-leaf}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Node$\ast$ create\_\-leaf (int {\em nl}, \/  Node\_\-type {\em t}, \/  char $\ast$ {\em lexema}, \/  void $\ast$ {\em att})}}
+\label{node_8h_c796e8a6c8fa6a58d06f7094152816bb}
+
+
+Constructor of a leaf Node (without any child). \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em nl}]: line number of the instruction that originates the node. \item[{\em t}]: node type (one of the values \# define'd above). Must return an error if the type in not correct. \item[{\em lexema}]: whatever string you want to associate to the node. \item[{\em att}]: a semantica attribute (can be NULL for now). \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]a (pointer) on a new Node. \end{Desc}
+\hypertarget{node_8h_3bf702618dee6354751e95c9c0f800c9}{
+\index{node.h@{node.h}!create\_\-node@{create\_\-node}}
+\index{create\_\-node@{create\_\-node}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Node$\ast$ create\_\-node (int {\em nl}, \/  Node\_\-type {\em t}, \/  char $\ast$ {\em lexema}, \/  void $\ast$ {\em att}, \/  int {\em nbc}, \/  Node $\ast$$\ast$ {\em children})}}
+\label{node_8h_3bf702618dee6354751e95c9c0f800c9}
+
+
+Constructor of a Node.
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em nl}]: line number of the instruction that originates the node. \item[{\em t}]: node type (one of the values \# define'd above). Must return an error if the type in not correct. \item[{\em lexema}]: whatever string you want to associate to the node. \item[{\em att}]: a semantical attribute. \item[{\em nbc}]: number of children nodes ($<$= MAX\_\-CHILDREN\_\-NUMBER and $>$= 0). Must return an error if nbc it not correct. \item[{\em children}]: array of children nodes (of size 'nbc'). \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]a (pointer on a) new Node. \end{Desc}
+\hypertarget{node_8h_58649350a2079d8c22fdf5b005a82bf2}{
+\index{node.h@{node.h}!deep\_\-free\_\-node@{deep\_\-free\_\-node}}
+\index{deep\_\-free\_\-node@{deep\_\-free\_\-node}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int deep\_\-free\_\-node (Node $\ast$ {\em n})}}
+\label{node_8h_58649350a2079d8c22fdf5b005a82bf2}
+
+
+Destructor of a Node. Desallocates (recursively) all the tree rooted at 'n'. \hypertarget{node_8h_4af6752a1b7e972b6b108010956f41b2}{
+\index{node.h@{node.h}!height@{height}}
+\index{height@{height}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int height (Node $\ast$ {\em n})}}
+\label{node_8h_4af6752a1b7e972b6b108010956f41b2}
+
+
+returns the height of the tree rooted by 'n'. The height of a leaf is 1. \hypertarget{node_8h_a7faef607e574100e30b08bb3b00fe0d}{
+\index{node.h@{node.h}!nb\_\-of\_\-children@{nb\_\-of\_\-children}}
+\index{nb\_\-of\_\-children@{nb\_\-of\_\-children}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int nb\_\-of\_\-children (Node $\ast$ {\em n})}}
+\label{node_8h_a7faef607e574100e30b08bb3b00fe0d}
+
+
+accessor to the number of children of a Node. Must return en error if 'n' is NULL. \hypertarget{node_8h_1e1a21ca62ad4d35baa0bf0694e5a241}{
+\index{node.h@{node.h}!pack\_\-nodes@{pack\_\-nodes}}
+\index{pack\_\-nodes@{pack\_\-nodes}!node.h@{node.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int pack\_\-nodes (Node $\ast$$\ast$$\ast$ {\em array\_\-of\_\-nodes}, \/  int {\em cur\_\-size}, \/  Node $\ast$ {\em n})}}
+\label{node_8h_1e1a21ca62ad4d35baa0bf0694e5a241}
+
+
+Pushes 'n' Nodes on bottom of an array of Node$\ast$ which contains originally 'cur\_\-size' entries. Returns the new number of entries (ie 'cur\_\-size+1') in the array 'array\_\-of\_\-nodes'. This function is convenient to be used with create\_\-node (see its last argument). On the first call, 'array\_\-of\_\-nodes' should not be allocated, and 'cur\_\-size' should be zero. Implementation limit: since these Node$\ast$ structures are meant to be used in a compiler, one expects an upper limit of MAX\_\-CHILDREN\_\-NUMBER nodes to be packed. Trying to pack more than this limit must raise an error. Typical use: Node$\ast$$\ast$ children; pf1 = create\_\-leaf(1, int\_\-node, \char`\"{}1\char`\"{}, NULL); pf3 = create\_\-leaf(1, int\_\-node, \char`\"{}2\char`\"{}, NULL); pack\_\-nodes(\&children, 0, pf1); pack\_\-nodes(\&children, 1, pf3); 

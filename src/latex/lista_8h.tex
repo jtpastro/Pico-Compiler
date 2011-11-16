@@ -1,0 +1,97 @@
+\hypertarget{lista_8h}{
+\section{Referência do Arquivo lista.h}
+\label{lista_8h}\index{lista.h@{lista.h}}
+}
+{\tt \#include $<$stdio.h$>$}\par
+\subsection*{Estruturas de Dados}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{structtac}{tac}
+\item 
+struct \hyperlink{structnode__tac}{node\_\-tac}
+\end{CompactItemize}
+\subsection*{Funções}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{structtac}{tac} $\ast$ \hyperlink{lista_8h_6df6802f042e743351406acae53ae8d1}{create\_\-inst\_\-tac} (const char $\ast$res, const char $\ast$arg1, const char $\ast$op, const char $\ast$arg2)
+\begin{CompactList}\small\item\em Construtor de Instrucao TAC. \item\end{CompactList}\item 
+void \hyperlink{lista_8h_45cadf0fc001224949be8105d73edeeb}{print\_\-inst\_\-tac} (FILE $\ast$out, struct \hyperlink{structtac}{tac} i)
+\begin{CompactList}\small\item\em Funcao que imprime o conteudo de uma instrucao TAC. \item\end{CompactList}\item 
+void \hyperlink{lista_8h_4b76df3efc3059ad64eb85101d823738}{print\_\-tac} (FILE $\ast$out, struct \hyperlink{structnode__tac}{node\_\-tac} $\ast$code)
+\begin{CompactList}\small\item\em Imprime no arquivo apontado por 'out' o conteudo da lista apontada por 'code'. \item\end{CompactList}\item 
+void \hyperlink{lista_8h_668a3ebdc9a0653f4120b36a22d5cdc4}{append\_\-inst\_\-tac} (struct \hyperlink{structnode__tac}{node\_\-tac} $\ast$$\ast$code, struct \hyperlink{structtac}{tac} $\ast$inst)
+\item 
+void \hyperlink{lista_8h_ef966fdb1f9bc3ca715d29f93ee3cc15}{cat\_\-tac} (struct \hyperlink{structnode__tac}{node\_\-tac} $\ast$$\ast$code\_\-a, struct \hyperlink{structnode__tac}{node\_\-tac} $\ast$$\ast$code\_\-b)
+\end{CompactItemize}
+
+
+\subsection{Descrição Detalhada}
+
+
+\subsection{Funções}
+\hypertarget{lista_8h_668a3ebdc9a0653f4120b36a22d5cdc4}{
+\index{lista.h@{lista.h}!append\_\-inst\_\-tac@{append\_\-inst\_\-tac}}
+\index{append\_\-inst\_\-tac@{append\_\-inst\_\-tac}!lista.h@{lista.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void append\_\-inst\_\-tac (struct {\bf node\_\-tac} $\ast$$\ast$ {\em code}, \/  struct {\bf tac} $\ast$ {\em inst})}}
+\label{lista_8h_668a3ebdc9a0653f4120b36a22d5cdc4}
+
+
+Insere no fim da lista 'code' o elemento 'inst'. \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em code}]lista (possivelmente vazia) inicial, em entrada. Na saida, contem $\ast$ a mesma lista, com mais um elemento inserido no fim.  o elemento inserido no fim da lista. \end{description}
+\end{Desc}
+\hypertarget{lista_8h_ef966fdb1f9bc3ca715d29f93ee3cc15}{
+\index{lista.h@{lista.h}!cat\_\-tac@{cat\_\-tac}}
+\index{cat\_\-tac@{cat\_\-tac}!lista.h@{lista.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void cat\_\-tac (struct {\bf node\_\-tac} $\ast$$\ast$ {\em code\_\-a}, \/  struct {\bf node\_\-tac} $\ast$$\ast$ {\em code\_\-b})}}
+\label{lista_8h_ef966fdb1f9bc3ca715d29f93ee3cc15}
+
+
+Concatena a lista 'code\_\-a' com a lista 'code\_\-b'. \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em code\_\-a}]lista (possivelmente vazia) inicial, em entrada. Na saida, contem a mesma lista concatenada com 'code\_\-b'. \item[{\em code\_\-b}]a lista concatenada com 'code\_\-a'. \end{description}
+\end{Desc}
+\hypertarget{lista_8h_6df6802f042e743351406acae53ae8d1}{
+\index{lista.h@{lista.h}!create\_\-inst\_\-tac@{create\_\-inst\_\-tac}}
+\index{create\_\-inst\_\-tac@{create\_\-inst\_\-tac}!lista.h@{lista.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}struct {\bf tac}$\ast$ create\_\-inst\_\-tac (const char $\ast$ {\em res}, \/  const char $\ast$ {\em arg1}, \/  const char $\ast$ {\em op}, \/  const char $\ast$ {\em arg2})\hspace{0.3cm}{\tt  \mbox{[}read\mbox{]}}}}
+\label{lista_8h_6df6802f042e743351406acae53ae8d1}
+
+
+Construtor de Instrucao TAC. 
+
+Para testes, pode-se usar qualquer string em argumentos. \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em res}]um char$\ast$. \item[{\em arg1}]um char$\ast$. \item[{\em op}]um char$\ast$. \item[{\em arg2}]um char$\ast$. @ return um ponteiro sobre uma 'struct tac'. \end{description}
+\end{Desc}
+\hypertarget{lista_8h_45cadf0fc001224949be8105d73edeeb}{
+\index{lista.h@{lista.h}!print\_\-inst\_\-tac@{print\_\-inst\_\-tac}}
+\index{print\_\-inst\_\-tac@{print\_\-inst\_\-tac}!lista.h@{lista.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void print\_\-inst\_\-tac (FILE $\ast$ {\em out}, \/  struct {\bf tac} {\em i})}}
+\label{lista_8h_45cadf0fc001224949be8105d73edeeb}
+
+
+Funcao que imprime o conteudo de uma instrucao TAC. 
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em out}]um ponteiro sobre um arquivo (aberto) aonde ira ser escrita a instrucao. \item[{\em i}]a instrucao a ser impressa. \end{description}
+\end{Desc}
+\hypertarget{lista_8h_4b76df3efc3059ad64eb85101d823738}{
+\index{lista.h@{lista.h}!print\_\-tac@{print\_\-tac}}
+\index{print\_\-tac@{print\_\-tac}!lista.h@{lista.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void print\_\-tac (FILE $\ast$ {\em out}, \/  struct {\bf node\_\-tac} $\ast$ {\em code})}}
+\label{lista_8h_4b76df3efc3059ad64eb85101d823738}
+
+
+Imprime no arquivo apontado por 'out' o conteudo da lista apontada por 'code'. 
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em out}]um ponteiro sobre um arquivo (aberto) aonde ira ser escrita a lista (uma linha por elemento). \item[{\em code}]o ponteiro para a lista a ser impressa. \end{description}
+\end{Desc}

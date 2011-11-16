@@ -1,0 +1,12 @@
+#!/bin/bash
+
+for i in 1; # substituir 1 por {1..n} onde n eh o numero do ultimo teste
+do
+    ../src/pico teste$i.txt > result$i.txt
+    cmp result$i.txt esperado$i.txt
+    if [ "$?" == "0" ]; then
+        echo "OK"
+    else
+        echo "ERRO!"
+    fi
+done

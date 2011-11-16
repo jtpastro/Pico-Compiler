@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Pico: Referência da Estrutura entry_t</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Gerado por Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Página&nbsp;Principal</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Estruturas&nbsp;de&nbsp;Dados</span></a></li>
+      <li><a href="files.html"><span>Arquivos</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Estruturas&nbsp;de&nbsp;Dados</span></a></li>
+      <li><a href="functions.html"><span>Campos&nbsp;de&nbsp;Dados</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Referência da Estrutura entry_t</h1><!-- doxytag: class="entry_t" --><code>#include &lt;<a class="el" href="symbol__table_8h-source.html">symbol_table.h</a>&gt;</code>
+<p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Campos de Dados</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html#b04f7c44381c01e411be318875eb5eb6">name</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html#f284680fed934779f16fc2b6a42101b1">type</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html#67460ae77b6a4433d48f7736ee6a500a">size</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html#bc62dec01315bbb72bff20ce69d8ef37">desloc</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html#6f7a7b18bd57fafba8d1f2d257ac3863">extra</a></td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Descrição Detalhada</h2>
+Tipo abstrato das entradas na tabela de Hash. (Obs.: futuramente, os campos dessa struct poderao vir a ser alterados em funcao das necessidades.) Na Etapa 2, nao e necessario entender o conteudo desses campos. Sempre vao ser inseridos na tabela, e recuperado dela, ponteiros sobre tais estruturas de dados abstratas. <hr><h2>Campos e Atributos</h2>
+<a class="anchor" name="b04f7c44381c01e411be318875eb5eb6"></a><!-- doxytag: member="entry_t::name" ref="b04f7c44381c01e411be318875eb5eb6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* <a class="el" href="structentry__t.html#b04f7c44381c01e411be318875eb5eb6">entry_t::name</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+um string que representa o nome de uma variavel. 
+</div>
+</div><p>
+<a class="anchor" name="f284680fed934779f16fc2b6a42101b1"></a><!-- doxytag: member="entry_t::type" ref="f284680fed934779f16fc2b6a42101b1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structentry__t.html#f284680fed934779f16fc2b6a42101b1">entry_t::type</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+representacao do tipo da variavel. 
+</div>
+</div><p>
+<a class="anchor" name="67460ae77b6a4433d48f7736ee6a500a"></a><!-- doxytag: member="entry_t::size" ref="67460ae77b6a4433d48f7736ee6a500a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structentry__t.html#67460ae77b6a4433d48f7736ee6a500a">entry_t::size</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+numero de Bytes necessarios para armazenamento. 
+</div>
+</div><p>
+<a class="anchor" name="bc62dec01315bbb72bff20ce69d8ef37"></a><!-- doxytag: member="entry_t::desloc" ref="bc62dec01315bbb72bff20ce69d8ef37" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structentry__t.html#bc62dec01315bbb72bff20ce69d8ef37">entry_t::desloc</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Endereco da proxima variavel. 
+</div>
+</div><p>
+<a class="anchor" name="6f7a7b18bd57fafba8d1f2d257ac3863"></a><!-- doxytag: member="entry_t::extra" ref="6f7a7b18bd57fafba8d1f2d257ac3863" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* <a class="el" href="structentry__t.html#6f7a7b18bd57fafba8d1f2d257ac3863">entry_t::extra</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+qualquer informacao extra. 
+</div>
+</div><p>
+<hr>A documentação para esta estrutura foi gerada a partir do seguinte arquivo:<ul>
+<li><a class="el" href="symbol__table_8h-source.html">symbol_table.h</a></ul>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Gerado em Mon Apr 5 13:43:07 2010 para Pico por&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

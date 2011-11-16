@@ -1,0 +1,65 @@
+\hypertarget{structentry__t}{
+\section{Referência da Estrutura entry\_\-t}
+\label{structentry__t}\index{entry\_\-t@{entry\_\-t}}
+}
+{\tt \#include $<$symbol\_\-table.h$>$}
+
+\subsection*{Campos de Dados}
+\begin{CompactItemize}
+\item 
+char $\ast$ \hyperlink{structentry__t_b04f7c44381c01e411be318875eb5eb6}{name}
+\item 
+int \hyperlink{structentry__t_f284680fed934779f16fc2b6a42101b1}{type}
+\item 
+int \hyperlink{structentry__t_67460ae77b6a4433d48f7736ee6a500a}{size}
+\item 
+int \hyperlink{structentry__t_bc62dec01315bbb72bff20ce69d8ef37}{desloc}
+\item 
+void $\ast$ \hyperlink{structentry__t_6f7a7b18bd57fafba8d1f2d257ac3863}{extra}
+\end{CompactItemize}
+
+
+\subsection{Descrição Detalhada}
+Tipo abstrato das entradas na tabela de Hash. (Obs.: futuramente, os campos dessa struct poderao vir a ser alterados em funcao das necessidades.) Na Etapa 2, nao e necessario entender o conteudo desses campos. Sempre vao ser inseridos na tabela, e recuperado dela, ponteiros sobre tais estruturas de dados abstratas. 
+
+\subsection{Campos e Atributos}
+\hypertarget{structentry__t_b04f7c44381c01e411be318875eb5eb6}{
+\index{entry\_\-t@{entry\_\-t}!name@{name}}
+\index{name@{name}!entry_t@{entry\_\-t}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf entry\_\-t::name}}}
+\label{structentry__t_b04f7c44381c01e411be318875eb5eb6}
+
+
+um string que representa o nome de uma variavel. \hypertarget{structentry__t_f284680fed934779f16fc2b6a42101b1}{
+\index{entry\_\-t@{entry\_\-t}!type@{type}}
+\index{type@{type}!entry_t@{entry\_\-t}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf entry\_\-t::type}}}
+\label{structentry__t_f284680fed934779f16fc2b6a42101b1}
+
+
+representacao do tipo da variavel. \hypertarget{structentry__t_67460ae77b6a4433d48f7736ee6a500a}{
+\index{entry\_\-t@{entry\_\-t}!size@{size}}
+\index{size@{size}!entry_t@{entry\_\-t}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf entry\_\-t::size}}}
+\label{structentry__t_67460ae77b6a4433d48f7736ee6a500a}
+
+
+numero de Bytes necessarios para armazenamento. \hypertarget{structentry__t_bc62dec01315bbb72bff20ce69d8ef37}{
+\index{entry\_\-t@{entry\_\-t}!desloc@{desloc}}
+\index{desloc@{desloc}!entry_t@{entry\_\-t}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf entry\_\-t::desloc}}}
+\label{structentry__t_bc62dec01315bbb72bff20ce69d8ef37}
+
+
+Endereco da proxima variavel. \hypertarget{structentry__t_6f7a7b18bd57fafba8d1f2d257ac3863}{
+\index{entry\_\-t@{entry\_\-t}!extra@{extra}}
+\index{extra@{extra}!entry_t@{entry\_\-t}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ {\bf entry\_\-t::extra}}}
+\label{structentry__t_6f7a7b18bd57fafba8d1f2d257ac3863}
+
+
+qualquer informacao extra. 
+
+A documentação para esta estrutura foi gerada a partir do seguinte arquivo:\begin{CompactItemize}
+\item 
+\hyperlink{symbol__table_8h}{symbol\_\-table.h}\end{CompactItemize}

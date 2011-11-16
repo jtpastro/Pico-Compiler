@@ -1,0 +1,151 @@
+\hypertarget{symbol__table_8h}{
+\section{Referência do Arquivo symbol\_\-table.h}
+\label{symbol__table_8h}\index{symbol\_\-table.h@{symbol\_\-table.h}}
+}
+{\tt \#include $<$stdio.h$>$}\par
+\subsection*{Estruturas de Dados}
+\begin{CompactItemize}
+\item 
+struct \hyperlink{structentry__t}{entry\_\-t}
+\end{CompactItemize}
+\subsection*{Funções}
+\begin{CompactItemize}
+\item 
+int \hyperlink{symbol__table_8h_f3a7cbc1fef81d913a02d08e294d0f23}{init\_\-table} (\hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} $\ast$table)
+\begin{CompactList}\small\item\em Inicializar a tabela de Hash. \item\end{CompactList}\item 
+void \hyperlink{symbol__table_8h_536683ad1a8a2523f70006409a3dfd68}{free\_\-table} (\hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} $\ast$table)
+\begin{CompactList}\small\item\em Destruir a tabela de Hash. \item\end{CompactList}\item 
+\hyperlink{structentry__t}{entry\_\-t} $\ast$ \hyperlink{symbol__table_8h_a6b03df2f1066890c436b42dd0e53929}{lookup} (\hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} table, char $\ast$name)
+\begin{CompactList}\small\item\em Retornar um ponteiro sobre a entrada associada a 'name'. \item\end{CompactList}\item 
+int \hyperlink{symbol__table_8h_7394fd3196ac3b53ce94550e4834451d}{insert} (\hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} $\ast$table, \hyperlink{structentry__t}{entry\_\-t} $\ast$entry)
+\begin{CompactList}\small\item\em Inserir uma entrada em uma tabela. \item\end{CompactList}\item 
+int \hyperlink{symbol__table_8h_4590a83bc564a643c17d45c043547c1a}{print\_\-table} (\hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} table)
+\begin{CompactList}\small\item\em Imprimir o conteudo de uma tabela. \item\end{CompactList}\item 
+int \hyperlink{symbol__table_8h_c2260bd8c917b424feded79815aa93a4}{print\_\-file\_\-table} (FILE $\ast$out, \hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t} table)
+\begin{CompactList}\small\item\em Imprimir o conteudo de uma tabela em um arquivo. \item\end{CompactList}\end{CompactItemize}
+\subsection*{Variáveis}
+\begin{CompactItemize}
+\item 
+typedef \hyperlink{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{symbol\_\-t}
+\begin{CompactList}\small\item\em Encapsulacao de um tipo abstrato que se chamara 'symbol\_\-t'. \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Descrição Detalhada}
+\begin{Desc}
+\item[Versão:]1.1 \end{Desc}
+
+
+\subsection{Funções}
+\hypertarget{symbol__table_8h_536683ad1a8a2523f70006409a3dfd68}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!free\_\-table@{free\_\-table}}
+\index{free\_\-table@{free\_\-table}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void free\_\-table ({\bf symbol\_\-t} $\ast$ {\em table})}}
+\label{symbol__table_8h_536683ad1a8a2523f70006409a3dfd68}
+
+
+Destruir a tabela de Hash. 
+
+'free\_\-table' eh o destrutor da estrutura de dados. Deve ser chamado pelo usuario no fim de seu uso de uma tabela de simbolos. \begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em table,uma}]referencia sobre uma tabela de simbolos. \end{description}
+\end{Desc}
+\hypertarget{symbol__table_8h_f3a7cbc1fef81d913a02d08e294d0f23}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!init\_\-table@{init\_\-table}}
+\index{init\_\-table@{init\_\-table}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int init\_\-table ({\bf symbol\_\-t} $\ast$ {\em table})}}
+\label{symbol__table_8h_f3a7cbc1fef81d913a02d08e294d0f23}
+
+
+Inicializar a tabela de Hash. 
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em table,uma}]referencia sobre uma tabela de simbolos. \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]o valor 0 se deu certo. \end{Desc}
+\hypertarget{symbol__table_8h_7394fd3196ac3b53ce94550e4834451d}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!insert@{insert}}
+\index{insert@{insert}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int insert ({\bf symbol\_\-t} $\ast$ {\em table}, \/  {\bf entry\_\-t} $\ast$ {\em entry})}}
+\label{symbol__table_8h_7394fd3196ac3b53ce94550e4834451d}
+
+
+Inserir uma entrada em uma tabela. 
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em table,uma}]tabela de simbolos. \item[{\em entry,uma}]entrada. \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]um numero negativo se nao se conseguiu efetuar a insercao, zero se deu certo. \end{Desc}
+\hypertarget{symbol__table_8h_a6b03df2f1066890c436b42dd0e53929}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!lookup@{lookup}}
+\index{lookup@{lookup}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf entry\_\-t}$\ast$ lookup ({\bf symbol\_\-t} {\em table}, \/  char $\ast$ {\em name})}}
+\label{symbol__table_8h_a6b03df2f1066890c436b42dd0e53929}
+
+
+Retornar um ponteiro sobre a entrada associada a 'name'. 
+
+Essa funcao deve consultar a tabela de simbolos para verificar se se encontra nela uma entrada associada a um char$\ast$ (string) fornecido em entrada. Para a implementacao, sera necessario usar uma funcao que mapeia um char$\ast$ a um numero inteiro. Aconselha-se, por exemplo, consultar o livro do dragao (Aho/Sethi/Ulman), Fig. 7.35 e a funcao HPJW.
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em table,uma}]tabela de simbolos. \item[{\em name,um}]char$\ast$ (string). \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]um ponteiro sobre a entrada associada a 'name', ou NULL se 'name' nao se encontrou na tabela. \end{Desc}
+\hypertarget{symbol__table_8h_c2260bd8c917b424feded79815aa93a4}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!print\_\-file\_\-table@{print\_\-file\_\-table}}
+\index{print\_\-file\_\-table@{print\_\-file\_\-table}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int print\_\-file\_\-table (FILE $\ast$ {\em out}, \/  {\bf symbol\_\-t} {\em table})}}
+\label{symbol__table_8h_c2260bd8c917b424feded79815aa93a4}
+
+
+Imprimir o conteudo de uma tabela em um arquivo. 
+
+A formatacao exata e deixada a carga do programador. Deve-se listar todas as entradas contidas na tabela atraves de seu nome (char$\ast$). Deve retornar o numero de entradas na tabela. A saida deve ser dirigida para um arquivo, cujo descritor e passado em parametro.
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em out,um}]descrito de arquivo (FILE$\ast$). \item[{\em table,uma}]tabela de simbolos. \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]o numero de entradas na tabela. \end{Desc}
+\hypertarget{symbol__table_8h_4590a83bc564a643c17d45c043547c1a}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!print\_\-table@{print\_\-table}}
+\index{print\_\-table@{print\_\-table}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int print\_\-table ({\bf symbol\_\-t} {\em table})}}
+\label{symbol__table_8h_4590a83bc564a643c17d45c043547c1a}
+
+
+Imprimir o conteudo de uma tabela. 
+
+A formatacao exata e deixada a carga do programador. Deve-se listar todas as entradas contidas na tabela atraves de seu nome (char$\ast$). Deve retornar o numero de entradas na tabela.
+
+\begin{Desc}
+\item[Parâmetros:]
+\begin{description}
+\item[{\em table,uma}]tabela de simbolos. \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Retorna:]o numero de entradas na tabela. \end{Desc}
+
+
+\subsection{Variáveis}
+\hypertarget{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}{
+\index{symbol\_\-table.h@{symbol\_\-table.h}!symbol\_\-t@{symbol\_\-t}}
+\index{symbol\_\-t@{symbol\_\-t}!symbol_table.h@{symbol\_\-table.h}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf symbol\_\-t}}}
+\label{symbol__table_8h_44ce8d14d8bd2b236319ff65f851af54}
+
+
+Encapsulacao de um tipo abstrato que se chamara 'symbol\_\-t'. 
+
+Voce deve inserir, entre o 'typedef' e o 'symbol\_\-t', a estrutura de dados abstrata que voce ira implementar. 

@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Pico: Referência do Arquivo lista.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Gerado por Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Página&nbsp;Principal</span></a></li>
+      <li><a href="annotated.html"><span>Estruturas&nbsp;de&nbsp;Dados</span></a></li>
+      <li class="current"><a href="files.html"><span>Arquivos</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Referência do Arquivo lista.h</h1><code>#include &lt;stdio.h&gt;</code><br>
+
+<p>
+<a href="lista_8h-source.html">Vá para o código-fonte deste arquivo.</a><table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Estruturas de Dados</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtac.html">tac</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnode__tac.html">node_tac</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Funções</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct <a class="el" href="structtac.html">tac</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="lista_8h.html#6df6802f042e743351406acae53ae8d1">create_inst_tac</a> (const char *res, const char *arg1, const char *op, const char *arg2)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construtor de Instrucao TAC.  <a href="#6df6802f042e743351406acae53ae8d1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="lista_8h.html#45cadf0fc001224949be8105d73edeeb">print_inst_tac</a> (FILE *out, struct <a class="el" href="structtac.html">tac</a> i)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Funcao que imprime o conteudo de uma instrucao TAC.  <a href="#45cadf0fc001224949be8105d73edeeb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="lista_8h.html#4b76df3efc3059ad64eb85101d823738">print_tac</a> (FILE *out, struct <a class="el" href="structnode__tac.html">node_tac</a> *code)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Imprime no arquivo apontado por 'out' o conteudo da lista apontada por 'code'.  <a href="#4b76df3efc3059ad64eb85101d823738"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="lista_8h.html#668a3ebdc9a0653f4120b36a22d5cdc4">append_inst_tac</a> (struct <a class="el" href="structnode__tac.html">node_tac</a> **code, struct <a class="el" href="structtac.html">tac</a> *inst)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="lista_8h.html#ef966fdb1f9bc3ca715d29f93ee3cc15">cat_tac</a> (struct <a class="el" href="structnode__tac.html">node_tac</a> **code_a, struct <a class="el" href="structnode__tac.html">node_tac</a> **code_b)</td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Descrição Detalhada</h2>
+<hr><h2>Funções</h2>
+<a class="anchor" name="668a3ebdc9a0653f4120b36a22d5cdc4"></a><!-- doxytag: member="lista.h::append_inst_tac" ref="668a3ebdc9a0653f4120b36a22d5cdc4" args="(struct node_tac **code, struct tac *inst)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void append_inst_tac           </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structnode__tac.html">node_tac</a> **&nbsp;</td>
+          <td class="paramname"> <em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structtac.html">tac</a> *&nbsp;</td>
+          <td class="paramname"> <em>inst</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Insere no fim da lista 'code' o elemento 'inst'. <dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>code</em>&nbsp;</td><td>lista (possivelmente vazia) inicial, em entrada. Na saida, contem * a mesma lista, com mais um elemento inserido no fim.  o elemento inserido no fim da lista. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ef966fdb1f9bc3ca715d29f93ee3cc15"></a><!-- doxytag: member="lista.h::cat_tac" ref="ef966fdb1f9bc3ca715d29f93ee3cc15" args="(struct node_tac **code_a, struct node_tac **code_b)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cat_tac           </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structnode__tac.html">node_tac</a> **&nbsp;</td>
+          <td class="paramname"> <em>code_a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structnode__tac.html">node_tac</a> **&nbsp;</td>
+          <td class="paramname"> <em>code_b</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Concatena a lista 'code_a' com a lista 'code_b'. <dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>code_a</em>&nbsp;</td><td>lista (possivelmente vazia) inicial, em entrada. Na saida, contem a mesma lista concatenada com 'code_b'. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>code_b</em>&nbsp;</td><td>a lista concatenada com 'code_a'. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="6df6802f042e743351406acae53ae8d1"></a><!-- doxytag: member="lista.h::create_inst_tac" ref="6df6802f042e743351406acae53ae8d1" args="(const char *res, const char *arg1, const char *op, const char *arg2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structtac.html">tac</a>* create_inst_tac           </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>arg1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>arg2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [read]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construtor de Instrucao TAC. 
+<p>
+Para testes, pode-se usar qualquer string em argumentos. <dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>res</em>&nbsp;</td><td>um char*. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>arg1</em>&nbsp;</td><td>um char*. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>op</em>&nbsp;</td><td>um char*. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>arg2</em>&nbsp;</td><td>um char*. @ return um ponteiro sobre uma 'struct tac'. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="45cadf0fc001224949be8105d73edeeb"></a><!-- doxytag: member="lista.h::print_inst_tac" ref="45cadf0fc001224949be8105d73edeeb" args="(FILE *out, struct tac i)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_inst_tac           </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&nbsp;</td>
+          <td class="paramname"> <em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structtac.html">tac</a>&nbsp;</td>
+          <td class="paramname"> <em>i</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Funcao que imprime o conteudo de uma instrucao TAC. 
+<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>um ponteiro sobre um arquivo (aberto) aonde ira ser escrita a instrucao. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>i</em>&nbsp;</td><td>a instrucao a ser impressa. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="4b76df3efc3059ad64eb85101d823738"></a><!-- doxytag: member="lista.h::print_tac" ref="4b76df3efc3059ad64eb85101d823738" args="(FILE *out, struct node_tac *code)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_tac           </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&nbsp;</td>
+          <td class="paramname"> <em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structnode__tac.html">node_tac</a> *&nbsp;</td>
+          <td class="paramname"> <em>code</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Imprime no arquivo apontado por 'out' o conteudo da lista apontada por 'code'. 
+<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>out</em>&nbsp;</td><td>um ponteiro sobre um arquivo (aberto) aonde ira ser escrita a lista (uma linha por elemento). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>code</em>&nbsp;</td><td>o ponteiro para a lista a ser impressa. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Gerado em Mon Apr 5 13:43:07 2010 para Pico por&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

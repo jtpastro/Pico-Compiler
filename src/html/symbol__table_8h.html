@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Pico: Referência do Arquivo symbol_table.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Gerado por Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Página&nbsp;Principal</span></a></li>
+      <li><a href="annotated.html"><span>Estruturas&nbsp;de&nbsp;Dados</span></a></li>
+      <li class="current"><a href="files.html"><span>Arquivos</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Referência do Arquivo symbol_table.h</h1><code>#include &lt;stdio.h&gt;</code><br>
+
+<p>
+<a href="symbol__table_8h-source.html">Vá para o código-fonte deste arquivo.</a><table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Estruturas de Dados</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structentry__t.html">entry_t</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Funções</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#f3a7cbc1fef81d913a02d08e294d0f23">init_table</a> (<a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *table)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Inicializar a tabela de Hash.  <a href="#f3a7cbc1fef81d913a02d08e294d0f23"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#536683ad1a8a2523f70006409a3dfd68">free_table</a> (<a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *table)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destruir a tabela de Hash.  <a href="#536683ad1a8a2523f70006409a3dfd68"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structentry__t.html">entry_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#a6b03df2f1066890c436b42dd0e53929">lookup</a> (<a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> table, char *name)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retornar um ponteiro sobre a entrada associada a 'name'.  <a href="#a6b03df2f1066890c436b42dd0e53929"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#7394fd3196ac3b53ce94550e4834451d">insert</a> (<a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *table, <a class="el" href="structentry__t.html">entry_t</a> *entry)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Inserir uma entrada em uma tabela.  <a href="#7394fd3196ac3b53ce94550e4834451d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#4590a83bc564a643c17d45c043547c1a">print_table</a> (<a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> table)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Imprimir o conteudo de uma tabela.  <a href="#4590a83bc564a643c17d45c043547c1a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#c2260bd8c917b424feded79815aa93a4">print_file_table</a> (FILE *out, <a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> table)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Imprimir o conteudo de uma tabela em um arquivo.  <a href="#c2260bd8c917b424feded79815aa93a4"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Variáveis</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Encapsulacao de um tipo abstrato que se chamara 'symbol_t'.  <a href="#44ce8d14d8bd2b236319ff65f851af54"></a><br></td></tr>
+</table>
+<hr><a name="_details"></a><h2>Descrição Detalhada</h2>
+<dl class="version" compact><dt><b>Versão:</b></dt><dd>1.1 </dd></dl>
+<hr><h2>Funções</h2>
+<a class="anchor" name="536683ad1a8a2523f70006409a3dfd68"></a><!-- doxytag: member="symbol_table.h::free_table" ref="536683ad1a8a2523f70006409a3dfd68" args="(symbol_t *table)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void free_table           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *&nbsp;</td>
+          <td class="paramname"> <em>table</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Destruir a tabela de Hash. 
+<p>
+'free_table' eh o destrutor da estrutura de dados. Deve ser chamado pelo usuario no fim de seu uso de uma tabela de simbolos. <dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>referencia sobre uma tabela de simbolos. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="f3a7cbc1fef81d913a02d08e294d0f23"></a><!-- doxytag: member="symbol_table.h::init_table" ref="f3a7cbc1fef81d913a02d08e294d0f23" args="(symbol_t *table)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int init_table           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *&nbsp;</td>
+          <td class="paramname"> <em>table</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Inicializar a tabela de Hash. 
+<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>referencia sobre uma tabela de simbolos. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Retorna:</b></dt><dd>o valor 0 se deu certo. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="7394fd3196ac3b53ce94550e4834451d"></a><!-- doxytag: member="symbol_table.h::insert" ref="7394fd3196ac3b53ce94550e4834451d" args="(symbol_t *table, entry_t *entry)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int insert           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a> *&nbsp;</td>
+          <td class="paramname"> <em>table</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structentry__t.html">entry_t</a> *&nbsp;</td>
+          <td class="paramname"> <em>entry</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Inserir uma entrada em uma tabela. 
+<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>tabela de simbolos. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>entry,uma</em>&nbsp;</td><td>entrada. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Retorna:</b></dt><dd>um numero negativo se nao se conseguiu efetuar a insercao, zero se deu certo. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="a6b03df2f1066890c436b42dd0e53929"></a><!-- doxytag: member="symbol_table.h::lookup" ref="a6b03df2f1066890c436b42dd0e53929" args="(symbol_t table, char *name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structentry__t.html">entry_t</a>* lookup           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a>&nbsp;</td>
+          <td class="paramname"> <em>table</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>name</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Retornar um ponteiro sobre a entrada associada a 'name'. 
+<p>
+Essa funcao deve consultar a tabela de simbolos para verificar se se encontra nela uma entrada associada a um char* (string) fornecido em entrada. Para a implementacao, sera necessario usar uma funcao que mapeia um char* a um numero inteiro. Aconselha-se, por exemplo, consultar o livro do dragao (Aho/Sethi/Ulman), Fig. 7.35 e a funcao HPJW.<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>tabela de simbolos. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>name,um</em>&nbsp;</td><td>char* (string). </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Retorna:</b></dt><dd>um ponteiro sobre a entrada associada a 'name', ou NULL se 'name' nao se encontrou na tabela. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="c2260bd8c917b424feded79815aa93a4"></a><!-- doxytag: member="symbol_table.h::print_file_table" ref="c2260bd8c917b424feded79815aa93a4" args="(FILE *out, symbol_t table)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int print_file_table           </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&nbsp;</td>
+          <td class="paramname"> <em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a>&nbsp;</td>
+          <td class="paramname"> <em>table</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Imprimir o conteudo de uma tabela em um arquivo. 
+<p>
+A formatacao exata e deixada a carga do programador. Deve-se listar todas as entradas contidas na tabela atraves de seu nome (char*). Deve retornar o numero de entradas na tabela. A saida deve ser dirigida para um arquivo, cujo descritor e passado em parametro.<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>out,um</em>&nbsp;</td><td>descrito de arquivo (FILE*). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>tabela de simbolos. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Retorna:</b></dt><dd>o numero de entradas na tabela. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="4590a83bc564a643c17d45c043547c1a"></a><!-- doxytag: member="symbol_table.h::print_table" ref="4590a83bc564a643c17d45c043547c1a" args="(symbol_t table)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int print_table           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a>&nbsp;</td>
+          <td class="paramname"> <em>table</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Imprimir o conteudo de uma tabela. 
+<p>
+A formatacao exata e deixada a carga do programador. Deve-se listar todas as entradas contidas na tabela atraves de seu nome (char*). Deve retornar o numero de entradas na tabela.<p>
+<dl compact><dt><b>Parâmetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>table,uma</em>&nbsp;</td><td>tabela de simbolos. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Retorna:</b></dt><dd>o numero de entradas na tabela. </dd></dl>
+
+</div>
+</div><p>
+<hr><h2>Variáveis</h2>
+<a class="anchor" name="44ce8d14d8bd2b236319ff65f851af54"></a><!-- doxytag: member="symbol_table.h::symbol_t" ref="44ce8d14d8bd2b236319ff65f851af54" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="symbol__table_8h.html#44ce8d14d8bd2b236319ff65f851af54">symbol_t</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Encapsulacao de um tipo abstrato que se chamara 'symbol_t'. 
+<p>
+Voce deve inserir, entre o 'typedef' e o 'symbol_t', a estrutura de dados abstrata que voce ira implementar. 
+</div>
+</div><p>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Gerado em Mon Apr 5 13:43:07 2010 para Pico por&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

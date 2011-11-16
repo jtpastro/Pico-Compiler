@@ -1,0 +1,63 @@
+\documentclass[a4paper]{book}
+\usepackage{a4wide}
+\usepackage{makeidx}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{times}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{doxygen}
+\makeindex
+\setcounter{tocdepth}{1}
+\renewcommand{\footrulewidth}{0.4pt}
+\begin{document}
+\begin{titlepage}
+\vspace*{7cm}
+\begin{center}
+{\Large Pico \\[1ex]\large 1.0 }\\
+\vspace*{1cm}
+{\large Gerado por Doxygen 1.5.5}\\
+\vspace*{0.5cm}
+{\small Mon Apr 5 13:43:07 2010}\\
+\end{center}
+\end{titlepage}
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\chapter{Índice das Estruturas de Dados}
+\input{annotated}
+\chapter{Índice dos Arquivos}
+\input{files}
+\chapter{Estruturas}
+\input{structentry__t}
+\include{structnode__tac}
+\include{structtac}
+\chapter{Arquivos}
+\input{lista_8h}
+\include{node_8h}
+\include{symbol__table_8h}
+\printindex
+\end{document}
