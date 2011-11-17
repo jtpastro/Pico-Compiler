@@ -1,0 +1,7 @@
+src/*.o
+src/lex.yy.c
+src/y.tab.c
+src/tokens.h
+src/pico
+Testes/testeNode
+Testes/node.?
