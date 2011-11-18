@@ -5,3 +5,8 @@ src/tokens.h
 src/pico
 Testes/testeNode
 Testes/node.?
+Testes/lista/*.o
+Testes/lista/*.txt
+Testes/lista/lista.[hc]
+Testes/lista/symbol_table.[hc]
+Testes/lista/testeLista

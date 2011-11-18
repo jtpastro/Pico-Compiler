@@ -47,6 +47,12 @@
 %token<cadeia> INT_LIT
 %token<cadeia> F_LIT
 
+%left OR
+%left AND
+%left NOT
+%left '+' '-'
+%left '*' '/'
+
 %type<no> code
 %type<no> declaracoes
 %type<no> declaracao
