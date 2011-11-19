@@ -1,54 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "node.h"
+#include "symbol_table.h"
+#include "lista.h"
 
 /* Programa principal do pico. */
-char* progname;
+char *progname;
 int lineno;
-extern FILE* yyin;
-
-void imprime(Node *n) {
-    Node *nodeAux;
-
-    if (n == NULL) {
-        exit(EXIT_FAILURE);
-    }
-
-    nodeAux = n;
-    if (is_leaf(nodeAux)) {
-        printf("%d - %s \n ", nodeAux->num_line, nodeAux->lexeme); // os lexemas estao nas folhas da arvore
-    } else {
-        nodeAux = nodeAux->first_child;
-        do {
-            imprime(nodeAux);
-            nodeAux = nodeAux->next_sibling;
-        } while (nodeAux != NULL);
-    }
-}
+extern FILE *yyin;
+extern symbol_t *s_table;
 
 int main(int argc, char* argv[]) 
 {
-    if (argc != 2) {
-        printf("uso: %s <input_file>. Try again!\n", argv[0]);
-        exit(-1);
-    }
-    yyin = fopen(argv[1], "r");
-    if (!yyin) {
-        printf("Uso: %s <input_file>. Could not find %s. Try again!\n", argv[0], argv[1]);
-        exit(-1);
-    }
+    struct attr_expr *attrib;
 
-    progname = argv[1];
+    if (argc != 4) {
+        printf("Uso: %s -o <output_file.tac> <input_file.pico>. Tente novamente!\n", argv[0]);
+        exit(-1);
+    }
+    if (strcmp(argv[1],"-o") != 0) {
+        printf("Uso: %s -o <output_file.tac> <input_file.pico>. Tente novamente!\n", argv[0]);
+        exit(-1);
+    }
+    yyin = fopen(argv[3], "r");
+    if (!yyin) {
+        printf("Uso: %s <input_file>. Could not find %s. Tente novamente!\n", argv[0], argv[1]);
+        exit(-1);
+    }
+	char *progname = (char *) malloc((strlen(argv[3])+1)*sizeof(char));
+	char *tacFile = (char *) malloc((strlen(argv[2])+1)*sizeof(char));;
+
+    strcpy(progname, argv[3]);
+    strcpy(tacFile, argv[2]);
 
     syntax_tree = NULL;
-
+    s_table = (symbol_t *) malloc(sizeof(symbol_t));
+    init_table(s_table);
     if (!yyparse()) {
-        printf("OKAY.\n");
-        imprime(syntax_tree);
-        FILE* output = fopen("../Testes/output.txt", "w");
-        uncompile(output, syntax_tree);
+        attrib = (struct attr_expr *) syntax_tree->attribute;
+        /*
+        FILE* output = fopen(tacFile, "w");
+        
+        fprintf(output, "%d\n", attrib->varsSize);
+        fprintf(output, "%d\n", attrib->tmpsSize);
+        print_tac(output, attrib->code, *s_table);
+
         fclose(output);
+        FILE* fTable = fopen("tablefile.txt", "w");
+        print_file_table(fTable, *s_table);
+        fclose(fTable);
+        */
     } else {
         printf("ERROR.\n");
 	    if (syntax_tree != NULL) {
@@ -59,6 +62,7 @@ int main(int argc, char* argv[])
         }
     }
 
+    free_table(s_table);
     fclose(yyin);
     return(0);
 }

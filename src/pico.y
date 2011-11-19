@@ -1,20 +1,28 @@
 %error-verbose
 %{
-  /* Aqui, pode-se inserir qualquer codigo C necessario ah compilacao
-   * final do parser. Sera copiado tal como esta no inicio do y.tab.c
-   * gerado por Yacc.
-   */
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include "node.h"
+    /* Aqui, pode-se inserir qualquer codigo C necessario ah compilacao
+     * final do parser. Sera copiado tal como esta no inicio do y.tab.c
+     * gerado por Yacc.
+     */
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include "node.h"
+    #include "symbol_table.h"
 
+    #define UNDEFINED_SYMBOL_ERROR -21
+    #define DEFINED_SYMBOL_ERROR   -22
+    #define ARRAY_INDEX_ERROR      -23
+
+    symbol_t *s_table;
+    int deslocVar = 0;
+    int deslocTmp = 0;
 %}
 
 %union {
-  char* cadeia;
-  struct _node * no;
+  char *cadeia;
+  struct _node *no;
 }
-
 
 %token INT
 %token DOUBLE
@@ -76,7 +84,18 @@
 
 %%
 code: declaracoes acoes {
+                            Code_attrib *attrib, *declAttrib, *acoesAttrib;
+                            
                             $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);
+                            
+                            $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                            attrib = (Code_attrib *) $$->attribute;
+                            declAttrib = $1->attribute;
+                            acoesAttrib = $2->attribute;
+                            
+                            attrib->varsTotalSize = declAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
+                            attrib->tmpsTotalSize = declAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
+                            
                             syntax_tree = $$;
                         }
     | acoes { $$ = $1; syntax_tree = $$; }
@@ -84,25 +103,98 @@ code: declaracoes acoes {
 
 declaracoes: declaracao ';' {
                                 Node *semiColonNode = create_node(@2.first_line, semicolon_node, ";", NULL);
+                                Code_attrib *attrib, *declAttrib;
+                                
                                 $$ = create_node(@1.first_line, declaracoes_node, NULL, $1, semiColonNode, NULL);
+                                
+                                $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                attrib = (Code_attrib *) $$->attribute;
+                                declAttrib = $1->attribute;
+                                
+                                attrib->varsTotalSize = declAttrib->varsTotalSize;
+                                attrib->tmpsTotalSize = declAttrib->tmpsTotalSize;
                             }
            | declaracoes declaracao ';' {
                                             Node *semiColonNode = create_node(@3.first_line, semicolon_node, ";", NULL);
+                                            Code_attrib *attrib, *decl1, *decl2;
+                                            
                                             $$ = create_node(@1.first_line, declaracoes_node, NULL, $1, $2, semiColonNode, NULL);
+                                            
+                                            $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                            attrib = (Code_attrib *) $$->attribute;
+                                            decl1 = $1->attribute;
+                                            decl2 = $2->attribute;
+                                            
+                                            attrib->varsTotalSize = decl1->varsTotalSize + decl2->varsTotalSize;
+                                            attrib->tmpsTotalSize = decl1->tmpsTotalSize + decl2->tmpsTotalSize;
                                         }
            ;
 
 declaracao: tipo ':' listadeclaracao {
                                          Node *colonNode = create_node(@2.first_line, colon_node, ":", NULL);
+                                         Code_attrib *attrib;
+                                         Type_attrib *typeAttrib;
+                                         Idf_attrib *currentIdf;
+                                         int type, size;
+                                         
                                          $$ = create_node(@1.first_line, declaracao_node, NULL, $1, colonNode, $3, NULL);
+                                         
+                                         $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                         attrib = (Code_attrib *) $$->attribute;
+                                         attrib->varsTotalSize = 0;
+                                         attrib->tmpsTotalSize = 0;
+                                         
+                                         typeAttrib = (Type_attrib *) $1->attribute;
+                                         type = typeAttrib->type;
+                                         size = typeAttrib->size;
+
+                                         currentIdf = $3->attribute;
+                                         while (currentIdf != NULL) {
+                                             entry_t *entry = (entry_t *) malloc(sizeof(entry_t));
+                                             entry->type = type;
+                                             entry->size = size;
+                                             entry->desloc = deslocVar;
+                                             entry->name = (char *) malloc((strlen(currentIdf->lexeme)+1)*sizeof(char));
+                                             strcpy(entry->name, currentIdf->lexeme);
+                                             
+                                             attrib->varsTotalSize = attrib->varsTotalSize + size;
+                                             
+                                             if (insert(s_table, entry) == 0) {
+                                                 deslocVar = deslocVar + size;
+                                                 currentIdf = currentIdf->next;
+                                             } else {
+                                                 printf("ERRO. A variável %s ja foi declarada.", entry->name);
+                                                 return DEFINED_SYMBOL_ERROR;
+                                             }
+                                         }
                                      }
           ;
 
-listadeclaracao: IDF { $$ = create_node(@1.first_line, idf_node, $1, NULL); }
+listadeclaracao: IDF {
+                         Idf_attrib *attrib;
+                         
+                         $$ = create_node(@1.first_line, idf_node, $1, NULL);
+                         
+                         $$->attribute = (Idf_attrib *) malloc(sizeof(Idf_attrib));
+                         attrib = (Idf_attrib *) $$->attribute;
+                         
+                         attrib->lexeme = (char *) malloc((strlen($1)+1)*sizeof(char));
+                         strcpy(attrib->lexeme, $1);
+                         attrib->next = NULL;
+                     }
                | IDF ',' listadeclaracao {
                                              Node *idfNode = create_node(@1.first_line, idf_node, $1, NULL);
                                              Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
+                                             Idf_attrib *attrib;
+                                             
                                              $$ = create_node(@1.first_line, listadeclaracao_node, NULL, idfNode, commaNode, $3, NULL);
+                                             
+                                             $$->attribute = (Idf_attrib *) malloc(sizeof(Idf_attrib));
+                                             attrib = (Idf_attrib *) $$->attribute;
+                                             
+                                             attrib->lexeme = (char *) malloc((strlen($1)+1)*sizeof(char));
+                                             strcpy(attrib->lexeme, $1);
+                                             attrib->next = $3->attribute;
                                          }
                ;
 
@@ -110,35 +202,115 @@ tipo: tipounico { $$ = $1; }
     | tipolista { $$ = $1; }
     ;
 
-tipounico: INT { $$ = create_node(@1.first_line, int_node, "int", NULL); }
-         | DOUBLE { $$ = create_node(@1.first_line, double_node, "double", NULL); }
-         | REAL { $$ = create_node(@1.first_line, real_node, "real", NULL); }
-         | CHAR { $$ = create_node(@1.first_line, char_node, "char", NULL); }
+tipounico: INT {
+                   Type_attrib *attrib;
+                   
+                   $$ = create_node(@1.first_line, int_node, "int", NULL);
+                   
+                   $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                   attrib = (Type_attrib *) $$->attribute;
+                   
+                   attrib->type = int_type;
+                   attrib->size = int_size;
+               }
+         | DOUBLE { 
+                      Type_attrib *attrib;
+                      
+                      $$ = create_node(@1.first_line, double_node, "double", NULL);
+                      
+                      $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                      attrib = (Type_attrib *) $$->attribute;
+
+                      attrib->type = double_type;
+                      attrib->size = double_size;
+                  }
+         | REAL {
+                    Type_attrib *attrib;
+                    
+                    $$ = create_node(@1.first_line, real_node, "real", NULL);
+                    
+                    $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                    attrib = (Type_attrib *) $$->attribute;
+
+                    attrib->type = real_type;
+                    attrib->size = real_size;
+                }
+         | CHAR {
+                    Type_attrib *attrib;
+                    
+                    $$ = create_node(@1.first_line, char_node, "char", NULL);
+                    
+                    $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                    attrib = (Type_attrib *) $$->attribute;
+
+                    attrib->type = char_type;
+                    attrib->size = char_size;
+                }
          ;
 
 tipolista: INT '(' listadupla ')' {
                                       Node *intNode = create_node(@1.first_line, int_node, "int", NULL);
                                       Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
                                       Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                      Type_attrib *attrib;
+                                      List_attrib *list;
+                                      
                                       $$ = create_node(@1.first_line, tipolista_node, NULL, intNode, lParNode, $3, rParNode, NULL);
+                                      
+                                      $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                                      attrib = (Type_attrib *) $$->attribute;
+                                      list = $3->attribute;
+                                      
+                                      attrib->type = int_array_type;
+                                      attrib->size = list->numElements * int_size;
                                   }
          | DOUBLE '(' listadupla ')' {
                                          Node *doubleNode = create_node(@1.first_line, double_node, "double", NULL);
                                          Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
                                          Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                         Type_attrib *attrib;
+                                         List_attrib *list;
+                                         
                                          $$ = create_node(@1.first_line, tipolista_node, NULL, doubleNode, lParNode, $3, rParNode, NULL);
+                                         
+                                         $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                                         attrib = (Type_attrib *) $$->attribute;
+                                         list = $3->attribute;
+
+                                         attrib->type = double_array_type;
+                                         attrib->size = list->numElements * double_size;
                                      }
          | REAL '(' listadupla ')' {
                                        Node *realNode = create_node(@1.first_line, real_node, "real", NULL);
                                        Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
                                        Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                       Type_attrib *attrib;
+                                       List_attrib *list;
+                                       
                                        $$ = create_node(@1.first_line, tipolista_node, NULL, realNode, lParNode, $3, rParNode, NULL);
+                                       
+                                       $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                                       attrib = (Type_attrib *) $$->attribute;
+                                       list = $3->attribute;
+                                       
+                                       attrib->type = real_array_type;
+                                       attrib->size = list->numElements * real_size;
                                    }
          | CHAR '(' listadupla ')' {
                                        Node *charNode = create_node(@1.first_line, char_node, "char", NULL);
                                        Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
                                        Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                       Type_attrib *attrib;
+                                       List_attrib *list;
+                                       
                                        $$ = create_node(@1.first_line, tipolista_node, NULL, charNode, lParNode, $3, rParNode, NULL);
+                                       
+                                       $$->attribute = (Type_attrib *) malloc(sizeof(Type_attrib));
+                                       attrib = (Type_attrib *) $$->attribute;
+                                       list = $3->attribute;
+                                       
+                                       attrib->type = char_array_type;
+                                       attrib->size = list->numElements * char_size;
                                    }
          ;
 
@@ -146,15 +318,41 @@ listadupla: INT_LIT ':' INT_LIT {
                                     Node *intLitNode1 = create_node(@1.first_line, int_lit_node, $1, NULL);
                                     Node *colonNode = create_node(@2.first_line, colon_node, ":", NULL);
                                     Node *intLitNode2 = create_node(@3.first_line, int_lit_node, $3, NULL);
+                                    List_attrib *attrib;
+                                    
                                     $$ = create_node(@1.first_line, listadupla_node, NULL, intLitNode1, colonNode, intLitNode2, NULL);
+                                    
+                                    $$->attribute = (List_attrib *) malloc(sizeof(List_attrib));
+                                    attrib = (List_attrib *) $$->attribute;
+                                    
+                                    attrib->numElements = atoi($3) - atoi($1) + 1;
+                                    if (attrib->numElements < 1) {
+                                        printf("ARRAY INDEX ERROR. O limite superior eh menor que o limite inferior.");
+                                        return ARRAY_INDEX_ERROR;
+                                    }
                                 }
           | INT_LIT ':' INT_LIT ',' listadupla {
                                                    Node *intLitNode1 = create_node(@1.first_line, int_lit_node, $1, NULL);
                                                    Node *colonNode = create_node(@2.first_line, colon_node, ":", NULL);
                                                    Node *intLitNode2 = create_node(@3.first_line, int_lit_node, $3, NULL);
                                                    Node *commaNode = create_node(@4.first_line, comma_node, ",", NULL);
+                                                   List_attrib *attrib, *list;
+                                                   int numElements;
+                                                   
                                                    $$ = create_node(@1.first_line, listadupla_node, NULL, intLitNode1, colonNode, intLitNode2,
                                                        commaNode, $5, NULL);
+                                                   
+                                                   $$->attribute = (List_attrib *) malloc(sizeof(List_attrib));
+                                                   attrib = (List_attrib *) $$->attribute;
+                                                   list = $5->attribute;
+                                                   
+                                                   numElements = atoi($3) - atoi($1) + 1;
+                                                   if (numElements < 1) {
+                                                       printf("ARRAY INDEX ERROR. O limite superior eh menor que o limite inferior.");
+                                                       return ARRAY_INDEX_ERROR;
+                                                   } else {
+                                                       attrib->numElements = numElements * list->numElements;
+                                                   }
                                                }
           ;
 
@@ -172,7 +370,7 @@ comando: lvalue '=' expr {
                              Node *equalsNode = create_node(@2.first_line, equals_node, "=", NULL);
                              $$ = create_node(@1.first_line, comando_node, NULL, $1, equalsNode, $3, NULL);
                          }
-       | enunciado { $$ = $1;}
+       | enunciado { $$ = $1; }
        ;
 
 lvalue: IDF { $$ = create_node(@1.first_line, idf_node, $1, NULL); }

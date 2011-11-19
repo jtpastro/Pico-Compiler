@@ -72,6 +72,21 @@ typedef int Node_type;
 #define ne_node              351
 #define print_node           352
 
+#define int_type             500
+#define double_type          501
+#define real_type            502
+#define char_type            503
+
+#define int_array_type       504
+#define double_array_type    505
+#define real_array_type      506
+#define char_array_type      507
+
+#define int_size             4
+#define double_size          8
+#define real_size            4
+#define char_size            1
+
 /** Estrutura de dados parcial para o no da arvore.
  *
  */
@@ -84,6 +99,28 @@ typedef struct _node {
    struct _node *first_child; /**< ponteiro para o primeiro filho */
    struct _node *next_sibling; /**< ponteiro para o proximo irmao */
 } Node;
+
+/**
+ * Estruturas para o campo attribute do no da arvore
+ */
+typedef struct _code_attr {
+    int varsTotalSize;
+    int tmpsTotalSize;
+} Code_attrib;
+
+typedef struct _type_attr {
+    int type;
+    int size;
+} Type_attrib;
+
+typedef struct _idf_attr {
+    char *lexeme;
+    struct _idf_attr *next;
+} Idf_attrib;
+
+typedef struct _list_attr {
+    int numElements;
+} List_attrib;
 
 extern Node * syntax_tree;
 
