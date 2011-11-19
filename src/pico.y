@@ -9,6 +9,7 @@
     #include <string.h>
     #include "node.h"
     #include "symbol_table.h"
+    #include "lista.h"
 
     #define UNDEFINED_SYMBOL_ERROR -21
     #define DEFINED_SYMBOL_ERROR   -22
@@ -17,6 +18,9 @@
     symbol_t *s_table;
     int deslocVar = 0;
     int deslocTmp = 0;
+    
+    int tmpNum = 0;
+    char* new_tmp();
 %}
 
 %union {
@@ -358,22 +362,79 @@ listadupla: INT_LIT ':' INT_LIT {
 
 acoes: comando ';' {
                        Node *semiColonNode = create_node(@2.first_line, semicolon_node, ";", NULL);
+                       Code_attrib *attrib, *comandoAttrib;
+                       
                        $$ = create_node(@1.first_line, acoes_node, NULL, $1, semiColonNode, NULL);
+                       
+                       $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                       attrib = (Code_attrib *) $$->attribute;
+                       comandoAttrib = $1->attribute;
+                       
+                       attrib->varsTotalSize = comandoAttrib->varsTotalSize;
+                       attrib->tmpsTotalSize = comandoAttrib->tmpsTotalSize;
+                       attrib->local = NULL;
+                       attrib->code = comandoAttrib->code;
                    }
     | comando ';' acoes {
                             Node *semiColonNode = create_node(@2.first_line, semicolon_node, ";", NULL);
+                            Code_attrib *attrib, *comandoAttrib, *acoesAttrib;
+                            
                             $$ = create_node(@1.first_line, acoes_node, NULL, $1, semiColonNode, $3, NULL);
+                            
+                            $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                            attrib = (Code_attrib *) $$->attribute;
+                            comandoAttrib = $1->attribute;
+                            acoesAttrib = $3->attribute;
+                            
+                            attrib->varsTotalSize = comandoAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
+                            attrib->tmpsTotalSize = comandoAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
+                            attrib->local = NULL;
+                            attrib->code = comandoAttrib->code;
+                            cat_tac(&(attrib->code), &(acoesAttrib->code));
                         }
     ;
 
 comando: lvalue '=' expr {
                              Node *equalsNode = create_node(@2.first_line, equals_node, "=", NULL);
+                             Code_attrib *attrib, *lvalueAttrib, *exprAttrib;
+                             struct tac *newCode;
+                             
                              $$ = create_node(@1.first_line, comando_node, NULL, $1, equalsNode, $3, NULL);
+                             
+                             $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                             attrib = (Code_attrib *) $$->attribute;
+                             lvalueAttrib = $1->attribute;
+                             exprAttrib = $3->attribute;
+                             
+                             attrib->varsTotalSize = lvalueAttrib->varsTotalSize + exprAttrib->varsTotalSize;
+                             attrib->tmpsTotalSize = lvalueAttrib->tmpsTotalSize + exprAttrib->tmpsTotalSize;
+                             attrib->local = NULL;
+                             attrib->code = exprAttrib->code;
+                             newCode = create_inst_tac(lvalueAttrib->local, exprAttrib->local, "", "");
+                             append_inst_tac(&(attrib->code), newCode);
                          }
        | enunciado { $$ = $1; }
        ;
 
-lvalue: IDF { $$ = create_node(@1.first_line, idf_node, $1, NULL); }
+lvalue: IDF {
+                Code_attrib *attrib;
+                
+                $$ = create_node(@1.first_line, idf_node, $1, NULL);
+                
+                $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                attrib = (Code_attrib *) $$->attribute;
+
+                if (lookup(*s_table, $1) == NULL) {
+                    printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", $1);
+                    return UNDEFINED_SYMBOL_ERROR;
+                } else {
+                    attrib->varsTotalSize = 0;
+                    attrib->tmpsTotalSize = 0;
+                    attrib->local = (char *) malloc((strlen($1)+1)*sizeof(char));
+                    strcpy(attrib->local, $1);
+                    attrib->code = NULL;
+                }
+            }
       | IDF '[' listaexpr ']' {
                                   Node *idfNode = create_node(@1.first_line, idf_node, $1, NULL);
                                   Node *lSqrBracketNode = create_node(@2.first_line, l_sqr_bracket_node, "[", NULL);
@@ -391,26 +452,115 @@ listaexpr: expr { $$ = $1; }
 
 expr: expr '+' expr {
                         Node *plusNode = create_node(@2.first_line, plus_node, "+", NULL);
+                        Code_attrib *attrib, *expr1, *expr2;
+                        struct tac *newCode;
+                        
                         $$ = create_node(@1.first_line, expr_node, NULL, $1, plusNode, $3, NULL);
+                        
+                        $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                        attrib = (Code_attrib *) $$->attribute;
+                        expr1 = $1->attribute;
+                        expr2 = $3->attribute;
+                        
+                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
+                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
+                        attrib->local = new_tmp();
+                        attrib->code = expr1->code;
+                        cat_tac(&(attrib->code), &(expr2->code));
+                        newCode = create_inst_tac(attrib->local, expr1->local, "ADD", expr2->local);
+                        append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '-' expr {
                         Node *minusNode = create_node(@2.first_line, minus_node, "-", NULL);
+                        Code_attrib *attrib, *expr1, *expr2;
+                        struct tac *newCode;
+                        
                         $$ = create_node(@1.first_line, expr_node, NULL, $1, minusNode, $3, NULL);
+                        
+                        $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                        attrib = (Code_attrib *) $$->attribute;
+                        expr1 = $1->attribute;
+                        expr2 = $3->attribute;
+                        
+                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
+                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
+                        attrib->local = new_tmp();
+                        attrib->code = expr1->code;
+                        cat_tac(&(attrib->code), &(expr2->code));
+                        newCode = create_inst_tac(attrib->local, expr1->local, "SUB", expr2->local);
+                        append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '*' expr {
                         Node *asteriskNode = create_node(@2.first_line, asterisk_node, "*", NULL);
+                        Code_attrib *attrib, *expr1, *expr2;
+                        struct tac *newCode;
+                        
                         $$ = create_node(@1.first_line, expr_node, NULL, $1, asteriskNode, $3, NULL);
+                        
+                        $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                        attrib = (Code_attrib *) $$->attribute;
+                        expr1 = $1->attribute;
+                        expr2 = $3->attribute;
+                        
+                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
+                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
+                        attrib->local = new_tmp();
+                        attrib->code = expr1->code;
+                        cat_tac(&(attrib->code), &(expr2->code));
+                        newCode = create_inst_tac(attrib->local, expr1->local, "MUL", expr2->local);
+                        append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '/' expr {
                         Node *slashNode = create_node(@2.first_line, asterisk_node, "/", NULL);
+                        Code_attrib *attrib, *expr1, *expr2;
+                        struct tac *newCode;
+                        
                         $$ = create_node(@1.first_line, expr_node, NULL, $1, slashNode, $3, NULL);
+                        
+                        $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                        attrib = (Code_attrib *) $$->attribute;
+                        expr1 = $1->attribute;
+                        expr2 = $3->attribute;
+                        
+                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
+                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
+                        attrib->local = new_tmp();
+                        attrib->code = expr1->code;
+                        cat_tac(&(attrib->code), &(expr2->code));
+                        newCode = create_inst_tac(attrib->local, expr1->local, "DIV", expr2->local);
+                        append_inst_tac(&(attrib->code), newCode);
                     }
     | '(' expr ')' {
                        Node *lParNode = create_node(@1.first_line, l_par_node, "(", NULL);
                        Node *rParNode = create_node(@3.first_line, r_par_node, ")", NULL);
+                       Code_attrib *attrib, *attribExpr;
+                       
                        $$ = create_node(@1.first_line, expr_node, NULL, lParNode, $2, rParNode, NULL);
+                       
+                       $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                       attrib = (Code_attrib *) $$->attribute;
+                       attribExpr = $2->attribute;
+                       
+                       attrib->varsTotalSize = attribExpr->varsTotalSize;
+                       attrib->tmpsTotalSize = attribExpr->tmpsTotalSize;
+                       attrib->local = (char *) malloc((strlen(attribExpr->local)+1)*sizeof(char));
+                       strcpy(attrib->local, attribExpr->local);
+                       attrib->code = attribExpr->code;
                    }
-    | INT_LIT  { $$ = create_node(@1.first_line, int_lit_node, $1, NULL); } 
+    | INT_LIT  {
+                   Code_attrib *attrib;
+                   
+                   $$ = create_node(@1.first_line, int_lit_node, $1, NULL);
+                   
+                   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                   attrib = (Code_attrib *) $$->attribute;
+                   
+                   attrib->varsTotalSize = 0;
+                   attrib->tmpsTotalSize = 0;
+                   attrib->local = (char *) malloc((strlen($1)+1)*sizeof(char));
+                   strcpy(attrib->local, $1);
+                   attrib->code = NULL;
+               }
     | F_LIT { $$ = create_node(@1.first_line, f_lit_node, $1, NULL); }
     | lvalue { $$ = $1; }
     | chamaproc { $$ = $1; }
@@ -446,7 +596,21 @@ enunciado: expr { $$ = $1; }
                                    Node *printNode = create_node(@1.first_line, print_node, "print", NULL);
                                    Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
                                    Node *rParNode = create_node(@4.first_line, r_par_node, ")", NULL);
+                                   Code_attrib *attrib, *exprAttrib;
+                                   struct tac *newCode;
+                                   
                                    $$ = create_node(@1.first_line, enunciado_node, NULL, printNode, lParNode, $3, rParNode, NULL);
+                                   
+                                   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                   attrib = (Code_attrib *) $$->attribute;
+                                   exprAttrib = $3->attribute;
+                                   
+                                   attrib->varsTotalSize = exprAttrib->varsTotalSize;
+                                   attrib->tmpsTotalSize = exprAttrib->tmpsTotalSize;
+                                   attrib->local = NULL;
+                                   attrib->code = exprAttrib->code;
+                                   newCode = create_inst_tac("", exprAttrib->local, "PRINT", "");
+                                   append_inst_tac(&(attrib->code), newCode);
                                }
          ;
 
@@ -505,3 +669,27 @@ expbool: TRUE { $$ = create_node(@1.first_line, true_node, "true", NULL); }
 %%
  /* A partir daqui, insere-se qlqer codigo C necessario.
   */
+
+/**
+ * Gera uma nova variavel temporaria e a insere na tabela de simbolos
+ */
+char* new_tmp() {
+    char *newTmp;
+    entry_t *entry;
+    sprintf(newTmp, "@tmp%d", tmpNum);
+    
+    // insere na tabela de simbolos
+    entry = (entry_t *) malloc(sizeof(entry_t));
+    entry->name = (char *) malloc((strlen(newTmp)+1)*sizeof(char));
+    strcpy(entry->name, newTmp);
+    entry->type = int_type;
+    entry->size = int_size;
+    entry->desloc = deslocTmp;
+    if (insert(s_table, entry) != 0) {
+        printf("Erro ao inserir uma variavel temporaria na tabela de simbolos!\n");
+        exit(EXIT_FAILURE);
+    }
+    deslocTmp = deslocTmp + int_size;
+
+    return newTmp;
+}

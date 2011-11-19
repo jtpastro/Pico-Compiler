@@ -106,6 +106,8 @@ typedef struct _node {
 typedef struct _code_attr {
     int varsTotalSize;
     int tmpsTotalSize;
+    char *local;
+    struct node_tac *code;
 } Code_attrib;
 
 typedef struct _type_attr {
