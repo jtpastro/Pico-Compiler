@@ -16,7 +16,7 @@ int main(void) {
     entry_t *entry[MAX];
     int i, desloc = 0;
     
-    struct node_tac *code = NULL;
+    struct node_tac *codeA = NULL, *codeB = NULL;
     struct tac *inst = NULL;
     
     if (init_table(s_table) != 0) {
@@ -43,11 +43,26 @@ int main(void) {
     }
     
     print_table(*s_table);
-    inst = create_inst_tac("", "@tmp1", "PRINT", "");
-    print_inst_tac(test_file, *inst);
     
-    append_inst_tac(&code, inst);
-    print_tac(test_file, code);
+    // cria lista codeA
+    inst = create_inst_tac("", "@tmp1", "PRINT", "");
+    append_inst_tac(&codeA, inst);
+    
+    inst = create_inst_tac("@tmp1", "x", "ADD", "y");
+    append_inst_tac(&codeA, inst);
+    
+    // cria lista codeB
+    inst = create_inst_tac("", "y", "PRINT", "");
+    append_inst_tac(&codeB, inst);
+    
+    inst = create_inst_tac("@tmp1", "z", "MUL", "var1");
+    append_inst_tac(&codeB, inst);
+    
+    // concatena as duas listas
+    cat_tac(&codeA, &codeB);
+    
+    // imprime as duas listas concatenadas
+    print_tac(test_file, codeA);
     
     fclose(test_file);
     free_table(s_table);
