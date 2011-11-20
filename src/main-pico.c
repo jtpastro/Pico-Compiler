@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "node.h"
-
+//teste
 /* Programa principal do pico. */
 char* progname;
 int lineno;
