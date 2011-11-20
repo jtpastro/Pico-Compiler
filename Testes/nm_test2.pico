@@ -1,0 +1,4 @@
+int: tmp;
+tmp = 2;
+tmp = tmp + 3;
+print(tmp);

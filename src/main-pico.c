@@ -14,7 +14,8 @@ extern symbol_t *s_table;
 
 int main(int argc, char* argv[]) 
 {
-    struct attr_expr *attrib;
+    Code_attrib *attrib;
+    char *tacFile;
 
     if (argc != 4) {
         printf("Uso: %s -o <output_file.tac> <input_file.pico>. Tente novamente!\n", argv[0]);
@@ -26,11 +27,11 @@ int main(int argc, char* argv[])
     }
     yyin = fopen(argv[3], "r");
     if (!yyin) {
-        printf("Uso: %s <input_file>. Could not find %s. Tente novamente!\n", argv[0], argv[1]);
+        printf("Uso: %s <input_file>. Nao foi possivel encontrar %s. Tente novamente!\n", argv[0], argv[3]);
         exit(-1);
     }
-	char *progname = (char *) malloc((strlen(argv[3])+1)*sizeof(char));
-	char *tacFile = (char *) malloc((strlen(argv[2])+1)*sizeof(char));;
+	progname = (char *) malloc((strlen(argv[3])+1)*sizeof(char));
+	tacFile = (char *) malloc((strlen(argv[2])+1)*sizeof(char));;
 
     strcpy(progname, argv[3]);
     strcpy(tacFile, argv[2]);
@@ -39,19 +40,14 @@ int main(int argc, char* argv[])
     s_table = (symbol_t *) malloc(sizeof(symbol_t));
     init_table(s_table);
     if (!yyparse()) {
-        attrib = (struct attr_expr *) syntax_tree->attribute;
-        /*
         FILE* output = fopen(tacFile, "w");
         
-        fprintf(output, "%d\n", attrib->varsSize);
-        fprintf(output, "%d\n", attrib->tmpsSize);
-        print_tac(output, attrib->code, *s_table);
+        attrib = syntax_tree->attribute;
+        fprintf(output, "%d\n", attrib->varsTotalSize);
+        fprintf(output, "%d\n", attrib->tmpsTotalSize);
+        print_tac(output, attrib->code);
 
         fclose(output);
-        FILE* fTable = fopen("tablefile.txt", "w");
-        print_file_table(fTable, *s_table);
-        fclose(fTable);
-        */
     } else {
         printf("ERROR.\n");
 	    if (syntax_tree != NULL) {

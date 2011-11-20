@@ -99,6 +99,8 @@ code: declaracoes acoes {
                             
                             attrib->varsTotalSize = declAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
                             attrib->tmpsTotalSize = declAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
+                            attrib->local = NULL;
+                            attrib->code = acoesAttrib->code;
                             
                             syntax_tree = $$;
                         }
@@ -117,6 +119,8 @@ declaracoes: declaracao ';' {
                                 
                                 attrib->varsTotalSize = declAttrib->varsTotalSize;
                                 attrib->tmpsTotalSize = declAttrib->tmpsTotalSize;
+                                attrib->local = NULL;
+                                attrib->code = NULL;
                             }
            | declaracoes declaracao ';' {
                                             Node *semiColonNode = create_node(@3.first_line, semicolon_node, ";", NULL);
@@ -131,6 +135,8 @@ declaracoes: declaracao ';' {
                                             
                                             attrib->varsTotalSize = decl1->varsTotalSize + decl2->varsTotalSize;
                                             attrib->tmpsTotalSize = decl1->tmpsTotalSize + decl2->tmpsTotalSize;
+                                            attrib->local = NULL;
+                                            attrib->code = NULL;
                                         }
            ;
 
@@ -147,6 +153,8 @@ declaracao: tipo ':' listadeclaracao {
                                          attrib = (Code_attrib *) $$->attribute;
                                          attrib->varsTotalSize = 0;
                                          attrib->tmpsTotalSize = 0;
+                                         attrib->local = NULL;
+                                         attrib->code = NULL;
                                          
                                          typeAttrib = (Type_attrib *) $1->attribute;
                                          type = typeAttrib->type;
@@ -677,6 +685,7 @@ char* new_tmp() {
     char *newTmp;
     entry_t *entry;
     sprintf(newTmp, "@tmp%d", tmpNum);
+    tmpNum = tmpNum + 1;
     
     // insere na tabela de simbolos
     entry = (entry_t *) malloc(sizeof(entry_t));

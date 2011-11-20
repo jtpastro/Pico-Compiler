@@ -1,0 +1,9 @@
+int: tmp, xyu;
+int: a;
+real: x ;
+int: b;
+
+a = 5;
+b = 3;
+a = (2*b)*(2*(6-b)-a);
+print(a);

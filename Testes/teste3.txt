@@ -1,7 +1,0 @@
-CONSTANTE
-A_
-A123_
-B___
-A_a
-A_1
-A_1BC3

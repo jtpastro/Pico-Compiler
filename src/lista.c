@@ -121,7 +121,9 @@ void cat_tac(struct node_tac ** code_a, struct node_tac ** code_b) {
             lastNode = lastNode->next;
         
         lastNode->next = *code_b;
-        (*code_b)->prev = lastNode;
+        
+        if (*code_b != NULL)
+            (*code_b)->prev = lastNode;
         
         // atualiza o campo number dos nodos
         aux = lastNode->next;
