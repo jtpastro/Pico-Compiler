@@ -443,20 +443,37 @@ lvalue: IDF {
                     attrib->code = NULL;
                 }
             }
+/*
       | IDF '[' listaexpr ']' {
                                   Node *idfNode = create_node(@1.first_line, idf_node, $1, NULL);
                                   Node *lSqrBracketNode = create_node(@2.first_line, l_sqr_bracket_node, "[", NULL);
                                   Node *rSqrBracketNode = create_node(@4.first_line, r_sqr_bracket_node, "]", NULL);
                                   $$ = create_node(@1.first_line, lvalue_node, NULL, idfNode, lSqrBracketNode, $3, rSqrBracketNode, NULL);
                               }
+*/
+      | listaexpr ']' {
+                          Node *rSqrBracketNode = create_node(@2.first_line, r_sqr_bracket_node, "]", NULL);
+                          $$ = create_node(@1.first_line, lvalue_node, NULL, $1, rSqrBracketNode, NULL);
+                      }
       ;
 
-listaexpr: expr { $$ = $1; }
-	   | expr ',' listaexpr {
-	                            Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
-	                            $$ = create_node(@1.first_line, listaexpr_node, NULL, $1, commaNode, $3, NULL);
-	                        }
-	   ;
+listaexpr: /* expr { $$ = $1; }
+	     | expr ',' listaexpr {
+	                              Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
+	                              $$ = create_node(@1.first_line, listaexpr_node, NULL, $1, commaNode, $3, NULL);
+	                          }
+         |
+         */
+           listaexpr ',' expr {
+                                  Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
+                                  $$ = create_node(@1.first_line, listaexpr_node, NULL, $1, commaNode, $3, NULL);
+                              }
+         | IDF '[' expr {
+                            Node *idfNode = create_node(@1.first_line, idf_node, $1, NULL);
+                            Node *lSqrBracketNode = create_node(@2.first_line, l_sqr_bracket_node, "[", NULL);
+                            $$ = create_node(@1.first_line, listaexpr_node, NULL, idfNode, lSqrBracketNode, $3, NULL);
+                        }
+	     ;
 
 expr: expr '+' expr {
                         Node *plusNode = create_node(@2.first_line, plus_node, "+", NULL);
