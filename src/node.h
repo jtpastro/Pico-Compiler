@@ -106,8 +106,11 @@ typedef struct _node {
 typedef struct _code_attr {
     int varsTotalSize;
     int tmpsTotalSize;
-    char *local;
-    struct node_tac *code;
+    char* local;
+    struct node_tac* code;
+    char* desloc;
+    char* array;
+    int ndim;
 } Code_attrib;
 
 typedef struct _type_attr {
@@ -116,7 +119,7 @@ typedef struct _type_attr {
 } Type_attrib;
 
 typedef struct _idf_attr {
-    char *lexeme;
+    char* lexeme;
     struct _idf_attr *next;
 } Idf_attrib;
 
