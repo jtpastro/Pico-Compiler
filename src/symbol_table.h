@@ -24,7 +24,18 @@ typedef struct {
    void* extra; /**< qualquer informacao extra. */
 } entry_t ;
 
+typedef struct _limit_t {
+    int index;
+    int limit;
+    struct _limit_t *next;
+} limit_t;
 
+typedef struct {
+    int c;
+    int width;
+    int ndim;
+    limit_t *dims;
+} array_info;
 
 /** \brief Nodo da lista encadeada de entradas da tabela de simbolos
  *

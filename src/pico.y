@@ -14,6 +14,7 @@
     #define UNDEFINED_SYMBOL_ERROR -21
     #define DEFINED_SYMBOL_ERROR   -22
     #define ARRAY_INDEX_ERROR      -23
+    #define ARRAY_DIMENSION_ERROR  -24
 
     symbol_t *s_table;
     int deslocVar = 0;
@@ -822,16 +823,58 @@ char* new_tmp() {
  */
 char* c(char *arrayName) {
     char *constant;
-    sprintf(constant, "1234");
+    entry_t *entry;
+    array_info *arrInfo;
+
+    entry = lookup(*s_table, arrayName);
+    if (entry == NULL) {
+        printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", arrayName);
+        exit(UNDEFINED_SYMBOL_ERROR);
+    }
+    arrInfo = (array_info *) entry->extra;
+    sprintf(constant, "%d", arrInfo->c);
     return constant;
 }
 
 char* width(char *arrayName) {
     char *elemSize;
-    sprintf(elemSize, "%d", int_size);
+    entry_t *entry;
+    array_info *arrInfo;
+    
+    entry = lookup(*s_table, arrayName);
+    if (entry == NULL) {
+        printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", arrayName);
+        exit(UNDEFINED_SYMBOL_ERROR);
+    }
+    arrInfo = (array_info *) entry->extra;
+    sprintf(elemSize, "%d", arrInfo->width);
     return elemSize;
 }
 
 char* limit(char *arrayName, int dim) {
-    return "5";
+    char *dimSize;
+    entry_t *entry;
+    array_info *arrInfo;
+    limit_t *currentDim;
+    
+    entry = lookup(*s_table, arrayName);
+    if (entry == NULL) {
+        printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", arrayName);
+        exit(UNDEFINED_SYMBOL_ERROR);
+    }
+    arrInfo = (array_info *) entry->extra;
+    if (dim > arrInfo->ndim) {
+        printf("ARRAY DIMENSION ERROR. O array %s possui apenas %d dimensoes.\n", arrayName, arrInfo->ndim);
+        exit(ARRAY_DIMENSION_ERROR);
+    }
+    currentDim = arrInfo->dims;
+    while (currentDim != NULL && currentDim->index != dim) {
+        currentDim = currentDim->next;
+    }
+    if (currentDim == NULL) {
+        printf("Dimensao %d nao encontrada no array %s!\n", dim, arrayName);
+        exit(EXIT_FAILURE);
+    }
+    sprintf(dimSize, "%d", currentDim->limit);
+    return dimSize;
 }
