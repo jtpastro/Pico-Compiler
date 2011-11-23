@@ -101,8 +101,8 @@ code: declaracoes acoes {
                             declAttrib = $1->attribute;
                             acoesAttrib = $2->attribute;
                             
-                            attrib->varsTotalSize = declAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
-                            attrib->tmpsTotalSize = declAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
+                            attrib->varsTotalSize = deslocVar; //declAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
+                            attrib->tmpsTotalSize = deslocTmp; //declAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
                             attrib->local = NULL;
                             attrib->code = acoesAttrib->code;
                             
