@@ -173,6 +173,40 @@ declaracao: tipo ':' listadeclaracao {
                                              entry->name = (char *) malloc((strlen(currentIdf->lexeme)+1)*sizeof(char));
                                              strcpy(entry->name, currentIdf->lexeme);
                                              
+                                             if (type >= int_array_type && type <= char_array_type) {
+                                                 array_info *arrInfo;
+                                                 Dim_info *dimInfo;
+                                                 int c, ndim;
+                                                 
+                                                 arrInfo = (array_info *) malloc(sizeof(array_info));
+                                                 switch (type) {
+                                                     case int_array_type: arrInfo->width = int_size; break;
+                                                     case double_array_type: arrInfo->width = double_size; break;
+                                                     case real_array_type: arrInfo->width = real_size; break;
+                                                     case char_array_type: arrInfo->width = char_size; break;
+                                                     default: printf("DEU PAU!"); return -1 ;break;
+                                                 }
+                                                 dimInfo = typeAttrib->dims;
+                                                 c = dimInfo->linf;
+                                                 ndim = 1;
+                                                 dimInfo = dimInfo->next;
+                                                 while (dimInfo != NULL) {
+                                                     c = c * dimInfo->n + dimInfo->linf;
+                                                     ndim = ndim + 1;
+                                                     dimInfo = dimInfo->next;
+                                                 }
+                                                 c = deslocVar - c * arrInfo->width;
+                                                 arrInfo->c = c;
+                                                 arrInfo->dims = typeAttrib->dims;
+                                                 arrInfo->ndim = ndim;
+                                                 entry->extra = arrInfo;
+                                                 
+                                                 /* TEEEESTE */
+                                                 array_info *teste = (array_info *) entry->extra;
+                                                 printf("c = %d\n",teste->c);
+                                                 printf("ndim = %d\n",teste->ndim);
+                                             }
+
                                              attrib->varsTotalSize = attrib->varsTotalSize + size;
                                              
                                              if (insert(s_table, entry) == 0) {
@@ -279,6 +313,7 @@ tipolista: INT '(' listadupla ')' {
                                       
                                       attrib->type = int_array_type;
                                       attrib->size = list->numElements * int_size;
+                                      attrib->dims = list->dims;
                                   }
          | DOUBLE '(' listadupla ')' {
                                          Node *doubleNode = create_node(@1.first_line, double_node, "double", NULL);
@@ -295,6 +330,7 @@ tipolista: INT '(' listadupla ')' {
 
                                          attrib->type = double_array_type;
                                          attrib->size = list->numElements * double_size;
+                                         attrib->dims = list->dims;
                                      }
          | REAL '(' listadupla ')' {
                                        Node *realNode = create_node(@1.first_line, real_node, "real", NULL);
@@ -311,6 +347,7 @@ tipolista: INT '(' listadupla ')' {
                                        
                                        attrib->type = real_array_type;
                                        attrib->size = list->numElements * real_size;
+                                       attrib->dims = list->dims;
                                    }
          | CHAR '(' listadupla ')' {
                                        Node *charNode = create_node(@1.first_line, char_node, "char", NULL);
@@ -327,6 +364,7 @@ tipolista: INT '(' listadupla ')' {
                                        
                                        attrib->type = char_array_type;
                                        attrib->size = list->numElements * char_size;
+                                       attrib->dims = list->dims;
                                    }
          ;
 
@@ -340,11 +378,18 @@ listadupla: INT_LIT ':' INT_LIT {
                                     
                                     $$->attribute = (List_attrib *) malloc(sizeof(List_attrib));
                                     attrib = (List_attrib *) $$->attribute;
-                                    
+
                                     attrib->numElements = atoi($3) - atoi($1) + 1;
                                     if (attrib->numElements < 1) {
                                         printf("ARRAY INDEX ERROR. O limite superior eh menor que o limite inferior.");
                                         return ARRAY_INDEX_ERROR;
+                                    } else {
+                                        Dim_info *dimInfo;
+                                        dimInfo = (Dim_info *) malloc(sizeof(Dim_info));
+                                        dimInfo->n = attrib->numElements;
+                                        dimInfo->linf = atoi($1);
+                                        dimInfo->next = NULL;
+                                        attrib->dims = dimInfo;
                                     }
                                 }
           | INT_LIT ':' INT_LIT ',' listadupla {
@@ -367,7 +412,13 @@ listadupla: INT_LIT ':' INT_LIT {
                                                        printf("ARRAY INDEX ERROR. O limite superior eh menor que o limite inferior.");
                                                        return ARRAY_INDEX_ERROR;
                                                    } else {
+                                                       Dim_info *dimInfo;
                                                        attrib->numElements = numElements * list->numElements;
+                                                       dimInfo = (Dim_info *) malloc(sizeof(Dim_info));
+                                                       dimInfo->n = numElements;
+                                                       dimInfo->linf = atoi($1);
+                                                       dimInfo->next = list->dims;
+                                                       attrib->dims = dimInfo;
                                                    }
                                                }
           ;
@@ -454,14 +505,6 @@ lvalue: IDF {
                     attrib->desloc = NULL;
                 }
             }
-/*
-      | IDF '[' listaexpr ']' {
-                                  Node *idfNode = create_node(@1.first_line, idf_node, $1, NULL);
-                                  Node *lSqrBracketNode = create_node(@2.first_line, l_sqr_bracket_node, "[", NULL);
-                                  Node *rSqrBracketNode = create_node(@4.first_line, r_sqr_bracket_node, "]", NULL);
-                                  $$ = create_node(@1.first_line, lvalue_node, NULL, idfNode, lSqrBracketNode, $3, rSqrBracketNode, NULL);
-                              }
-*/
       | listaexpr ']' {
                           Node *rSqrBracketNode = create_node(@2.first_line, r_sqr_bracket_node, "]", NULL);
                           Code_attrib *attrib, *listaAttrib;
@@ -485,14 +528,7 @@ lvalue: IDF {
                       }
       ;
 
-listaexpr: /* expr { $$ = $1; }
-	     | expr ',' listaexpr {
-	                              Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
-	                              $$ = create_node(@1.first_line, listaexpr_node, NULL, $1, commaNode, $3, NULL);
-	                          }
-         |
-         */
-           listaexpr ',' expr {
+listaexpr: listaexpr ',' expr {
                                   Node *commaNode = create_node(@2.first_line, comma_node, ",", NULL);
                                   Code_attrib *attrib, *listaAttrib, *exprAttrib;
                                   char *tmp;
@@ -819,7 +855,7 @@ char* new_tmp() {
 }
 
 /**
- * 
+ * Retorna a constante c usada no cálculo de endereço de um elemento de array
  */
 char* c(char *arrayName) {
     char *constant;
@@ -836,6 +872,9 @@ char* c(char *arrayName) {
     return constant;
 }
 
+/**
+ * Retorna o tamanho de um elemento do array
+ */
 char* width(char *arrayName) {
     char *elemSize;
     entry_t *entry;
@@ -851,11 +890,15 @@ char* width(char *arrayName) {
     return elemSize;
 }
 
+/**
+ * Retorna o tamanho da dimensao dim do array
+ */
 char* limit(char *arrayName, int dim) {
     char *dimSize;
     entry_t *entry;
     array_info *arrInfo;
-    limit_t *currentDim;
+    Dim_info *currentDim;
+    int i;
     
     entry = lookup(*s_table, arrayName);
     if (entry == NULL) {
@@ -868,13 +911,15 @@ char* limit(char *arrayName, int dim) {
         exit(ARRAY_DIMENSION_ERROR);
     }
     currentDim = arrInfo->dims;
-    while (currentDim != NULL && currentDim->index != dim) {
+    i = 1;
+    while (currentDim != NULL && i < dim) {
         currentDim = currentDim->next;
+        i = i + 1;
     }
     if (currentDim == NULL) {
         printf("Dimensao %d nao encontrada no array %s!\n", dim, arrayName);
         exit(EXIT_FAILURE);
     }
-    sprintf(dimSize, "%d", currentDim->limit);
+    sprintf(dimSize, "%d", currentDim->n);
     return dimSize;
 }

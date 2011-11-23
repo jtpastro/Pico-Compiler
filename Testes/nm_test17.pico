@@ -1,0 +1,9 @@
+int: z;
+int(0:1): x;
+real(1:2): a;
+double(2:3): b;
+char(3:4): c;
+
+x[0] = 17;
+z = x[0];
+print(z);
