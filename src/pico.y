@@ -101,8 +101,8 @@ code: declaracoes acoes {
                             declAttrib = $1->attribute;
                             acoesAttrib = $2->attribute;
                             
-                            attrib->varsTotalSize = deslocVar; //declAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
-                            attrib->tmpsTotalSize = deslocTmp; //declAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
+                            attrib->varsTotalSize = deslocVar;
+                            attrib->tmpsTotalSize = deslocTmp;
                             attrib->local = NULL;
                             attrib->code = acoesAttrib->code;
                             
@@ -121,8 +121,6 @@ declaracoes: declaracao ';' {
                                 attrib = (Code_attrib *) $$->attribute;
                                 declAttrib = $1->attribute;
                                 
-                                attrib->varsTotalSize = declAttrib->varsTotalSize;
-                                attrib->tmpsTotalSize = declAttrib->tmpsTotalSize;
                                 attrib->local = NULL;
                                 attrib->code = NULL;
                             }
@@ -137,8 +135,6 @@ declaracoes: declaracao ';' {
                                             decl1 = $1->attribute;
                                             decl2 = $2->attribute;
                                             
-                                            attrib->varsTotalSize = decl1->varsTotalSize + decl2->varsTotalSize;
-                                            attrib->tmpsTotalSize = decl1->tmpsTotalSize + decl2->tmpsTotalSize;
                                             attrib->local = NULL;
                                             attrib->code = NULL;
                                         }
@@ -155,8 +151,6 @@ declaracao: tipo ':' listadeclaracao {
                                          
                                          $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
                                          attrib = (Code_attrib *) $$->attribute;
-                                         attrib->varsTotalSize = 0;
-                                         attrib->tmpsTotalSize = 0;
                                          attrib->local = NULL;
                                          attrib->code = NULL;
                                          
@@ -179,13 +173,7 @@ declaracao: tipo ':' listadeclaracao {
                                                  int c, ndim;
                                                  
                                                  arrInfo = (array_info *) malloc(sizeof(array_info));
-                                                 switch (type) {
-                                                     case int_array_type: arrInfo->width = int_size; break;
-                                                     case double_array_type: arrInfo->width = double_size; break;
-                                                     case real_array_type: arrInfo->width = real_size; break;
-                                                     case char_array_type: arrInfo->width = char_size; break;
-                                                     default: printf("DEU PAU!"); return -1 ;break;
-                                                 }
+                                                 arrInfo->width = typeAttrib->width;
                                                  dimInfo = typeAttrib->dims;
                                                  c = dimInfo->linf;
                                                  ndim = 1;
@@ -201,8 +189,6 @@ declaracao: tipo ':' listadeclaracao {
                                                  arrInfo->ndim = ndim;
                                                  entry->extra = arrInfo;
                                              }
-
-                                             attrib->varsTotalSize = attrib->varsTotalSize + size;
                                              
                                              if (insert(s_table, entry) == 0) {
                                                  deslocVar = deslocVar + size;
@@ -308,6 +294,7 @@ tipolista: INT '(' listadupla ')' {
                                       
                                       attrib->type = int_array_type;
                                       attrib->size = list->numElements * int_size;
+                                      attrib->width = int_size;
                                       attrib->dims = list->dims;
                                   }
          | DOUBLE '(' listadupla ')' {
@@ -325,6 +312,7 @@ tipolista: INT '(' listadupla ')' {
 
                                          attrib->type = double_array_type;
                                          attrib->size = list->numElements * double_size;
+                                         attrib->width = double_size;
                                          attrib->dims = list->dims;
                                      }
          | REAL '(' listadupla ')' {
@@ -342,6 +330,7 @@ tipolista: INT '(' listadupla ')' {
                                        
                                        attrib->type = real_array_type;
                                        attrib->size = list->numElements * real_size;
+                                       attrib->width = real_size;
                                        attrib->dims = list->dims;
                                    }
          | CHAR '(' listadupla ')' {
@@ -359,6 +348,7 @@ tipolista: INT '(' listadupla ')' {
                                        
                                        attrib->type = char_array_type;
                                        attrib->size = list->numElements * char_size;
+                                       attrib->width = char_size;
                                        attrib->dims = list->dims;
                                    }
          ;
@@ -428,8 +418,6 @@ acoes: comando ';' {
                        attrib = (Code_attrib *) $$->attribute;
                        comandoAttrib = $1->attribute;
                        
-                       attrib->varsTotalSize = comandoAttrib->varsTotalSize;
-                       attrib->tmpsTotalSize = comandoAttrib->tmpsTotalSize;
                        attrib->local = NULL;
                        attrib->code = comandoAttrib->code;
                    }
@@ -444,8 +432,6 @@ acoes: comando ';' {
                             comandoAttrib = $1->attribute;
                             acoesAttrib = $3->attribute;
                             
-                            attrib->varsTotalSize = comandoAttrib->varsTotalSize + acoesAttrib->varsTotalSize;
-                            attrib->tmpsTotalSize = comandoAttrib->tmpsTotalSize + acoesAttrib->tmpsTotalSize;
                             attrib->local = NULL;
                             attrib->code = comandoAttrib->code;
                             cat_tac(&(attrib->code), &(acoesAttrib->code));
@@ -465,8 +451,6 @@ comando: lvalue '=' expr {
                              lvalueAttrib = $1->attribute;
                              exprAttrib = $3->attribute;
                              
-                             attrib->varsTotalSize = lvalueAttrib->varsTotalSize + exprAttrib->varsTotalSize;
-                             attrib->tmpsTotalSize = lvalueAttrib->tmpsTotalSize + exprAttrib->tmpsTotalSize;
                              attrib->local = NULL;
                              attrib->code = lvalueAttrib->code;
                              cat_tac(&(attrib->code), &(exprAttrib->code));
@@ -476,7 +460,6 @@ comando: lvalue '=' expr {
                              } else {
                                  struct tac *newCode1, *newCode2;
                                  char* tmp = new_tmp();
-                                 attrib->tmpsTotalSize = attrib->tmpsTotalSize + int_size;
                                  newCode1 = create_inst_tac(tmp, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
                                  append_inst_tac(&(attrib->code), newCode1);
                                  arrVar = (char *) malloc((strlen(tmp)+strlen(lvalueAttrib->array)+2+1)*sizeof(char));
@@ -500,8 +483,6 @@ lvalue: IDF {
                     printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", $1);
                     return UNDEFINED_SYMBOL_ERROR;
                 } else {
-                    attrib->varsTotalSize = 0;
-                    attrib->tmpsTotalSize = 0;
                     attrib->local = (char *) malloc((strlen($1)+1)*sizeof(char));
                     strcpy(attrib->local, $1);
                     attrib->code = NULL;
@@ -519,8 +500,6 @@ lvalue: IDF {
                           attrib = (Code_attrib *) $$->attribute;
                           listaAttrib = $1->attribute;
                           
-                          attrib->varsTotalSize = 0;
-                          attrib->tmpsTotalSize = int_size + int_size + listaAttrib->tmpsTotalSize;
                           attrib->local = new_tmp();
                           attrib->desloc = new_tmp();
                           attrib->code = listaAttrib->code;
@@ -579,8 +558,6 @@ listaexpr: listaexpr ',' expr {
                                 printf("UNDEFINED SYMBOL. A variavel %s nao foi declarada.\n", $1);
                                 return UNDEFINED_SYMBOL_ERROR;
                             } else {
-                                attrib->varsTotalSize = exprAttrib->varsTotalSize;
-                                attrib->tmpsTotalSize = exprAttrib->tmpsTotalSize;
                                 attrib->array = (char *) malloc((strlen($1)+1)*sizeof(char));
                                 strcpy(attrib->array, $1);
                                 attrib->local = (char *) malloc((strlen(exprAttrib->local)+1)*sizeof(char));
@@ -604,8 +581,6 @@ expr: expr '+' expr {
                         expr1 = $1->attribute;
                         expr2 = $3->attribute;
                         
-                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
-                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
@@ -624,8 +599,6 @@ expr: expr '+' expr {
                         expr1 = $1->attribute;
                         expr2 = $3->attribute;
                         
-                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
-                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
@@ -644,8 +617,6 @@ expr: expr '+' expr {
                         expr1 = $1->attribute;
                         expr2 = $3->attribute;
                         
-                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
-                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
@@ -664,8 +635,6 @@ expr: expr '+' expr {
                         expr1 = $1->attribute;
                         expr2 = $3->attribute;
                         
-                        attrib->varsTotalSize = expr1->varsTotalSize + expr2->varsTotalSize;
-                        attrib->tmpsTotalSize = int_size + expr1->tmpsTotalSize + expr2->tmpsTotalSize;
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
@@ -683,8 +652,6 @@ expr: expr '+' expr {
                        attrib = (Code_attrib *) $$->attribute;
                        attribExpr = $2->attribute;
                        
-                       attrib->varsTotalSize = attribExpr->varsTotalSize;
-                       attrib->tmpsTotalSize = attribExpr->tmpsTotalSize;
                        attrib->local = (char *) malloc((strlen(attribExpr->local)+1)*sizeof(char));
                        strcpy(attrib->local, attribExpr->local);
                        attrib->code = attribExpr->code;
@@ -697,8 +664,6 @@ expr: expr '+' expr {
                    $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
                    attrib = (Code_attrib *) $$->attribute;
                    
-                   attrib->varsTotalSize = 0;
-                   attrib->tmpsTotalSize = 0;
                    attrib->local = (char *) malloc((strlen($1)+1)*sizeof(char));
                    strcpy(attrib->local, $1);
                    attrib->code = NULL;
@@ -718,8 +683,6 @@ expr: expr '+' expr {
                      $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
                      attrib = (Code_attrib *) $$->attribute;
                      
-                     attrib->varsTotalSize = 0;
-                     attrib->tmpsTotalSize = int_size + lvalueAttrib->tmpsTotalSize;
                      attrib->local = new_tmp();
                      attrib->code = lvalueAttrib->code;
                      newCode1 = create_inst_tac(attrib->local, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
@@ -772,8 +735,6 @@ enunciado: expr { $$ = $1; }
                                    attrib = (Code_attrib *) $$->attribute;
                                    exprAttrib = $3->attribute;
                                    
-                                   attrib->varsTotalSize = exprAttrib->varsTotalSize;
-                                   attrib->tmpsTotalSize = exprAttrib->tmpsTotalSize;
                                    attrib->local = NULL;
                                    attrib->code = exprAttrib->code;
                                    newCode = create_inst_tac("", exprAttrib->local, "PRINT", "");

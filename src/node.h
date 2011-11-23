@@ -122,6 +122,7 @@ typedef struct _dim_info {
 typedef struct _type_attr {
     int type;
     int size;
+    int width;
     Dim_info *dims;
 } Type_attrib;
 
