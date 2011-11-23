@@ -136,11 +136,20 @@ void cat_tac(struct node_tac ** code_a, struct node_tac ** code_b) {
 }
 
 char* idf_to_tac(char *idf) {
-    entry_t *entry = lookup(*s_table, idf);
+    entry_t *entry;
     char *result = NULL;
-    if (entry == NULL) { // se nao estah na tabela de simbolos
+    if (strchr(idf,'[') != NULL && strchr(idf,']') != NULL) {
+        char *local = idf_to_tac(strtok(idf, "["));
+        char *desloc = idf_to_tac(strtok(NULL, "]"));
+        result = (char *) malloc((strlen(local)+strlen(desloc)+2+1)*sizeof(char));
+        sprintf(result, "%s(%s)", desloc, local);
+        return result;
+    }
+    
+    entry = lookup(*s_table, idf);
+    if (entry == NULL) { // se nao estah na tabela de simbolos        
         result = (char *) malloc((strlen(idf)+1)*sizeof(char));
-        sprintf(result, "%s", idf); // eh uma constante
+        strcpy(result, idf); // eh uma constante
     } else {
         result = (char *) malloc(8*sizeof(char));
         if (entry->name[0] == '@') // se for uma variavel temporaria

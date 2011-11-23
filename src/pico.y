@@ -200,11 +200,6 @@ declaracao: tipo ':' listadeclaracao {
                                                  arrInfo->dims = typeAttrib->dims;
                                                  arrInfo->ndim = ndim;
                                                  entry->extra = arrInfo;
-                                                 
-                                                 /* TEEEESTE */
-                                                 array_info *teste = (array_info *) entry->extra;
-                                                 printf("c = %d\n",teste->c);
-                                                 printf("ndim = %d\n",teste->ndim);
                                              }
 
                                              attrib->varsTotalSize = attrib->varsTotalSize + size;
@@ -473,14 +468,22 @@ comando: lvalue '=' expr {
                              attrib->varsTotalSize = lvalueAttrib->varsTotalSize + exprAttrib->varsTotalSize;
                              attrib->tmpsTotalSize = lvalueAttrib->tmpsTotalSize + exprAttrib->tmpsTotalSize;
                              attrib->local = NULL;
-                             attrib->code = exprAttrib->code;
+                             attrib->code = lvalueAttrib->code;
+                             cat_tac(&(attrib->code), &(exprAttrib->code));
                              if (lvalueAttrib->desloc == NULL) {
                                  newCode = create_inst_tac(lvalueAttrib->local, exprAttrib->local, "", "");
+                                 append_inst_tac(&(attrib->code), newCode);
                              } else {
-                                 sprintf(arrVar, "%s[%s]", lvalueAttrib->local, lvalueAttrib->desloc);
-                                 newCode = create_inst_tac(arrVar, exprAttrib->local, "", "");
+                                 struct tac *newCode1, *newCode2;
+                                 char* tmp = new_tmp();
+                                 attrib->tmpsTotalSize = attrib->tmpsTotalSize + int_size;
+                                 newCode1 = create_inst_tac(tmp, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
+                                 append_inst_tac(&(attrib->code), newCode1);
+                                 arrVar = (char *) malloc((strlen(tmp)+strlen(lvalueAttrib->array)+2+1)*sizeof(char));
+                                 sprintf(arrVar, "%s[%s]", lvalueAttrib->array, tmp);
+                                 newCode2 = create_inst_tac(arrVar, exprAttrib->local, "", "");
+                                 append_inst_tac(&(attrib->code), newCode2);
                              }
-                             append_inst_tac(&(attrib->code), newCode);
                          }
        | enunciado { $$ = $1; }
        ;
@@ -525,6 +528,8 @@ lvalue: IDF {
                           append_inst_tac(&(attrib->code), newCode1);
                           newCode2 = create_inst_tac(attrib->desloc, listaAttrib->local, "MUL", width(listaAttrib->array));
                           append_inst_tac(&(attrib->code), newCode2);
+                          attrib->array = (char *) malloc((strlen(listaAttrib->array)+1)*sizeof(char));
+                          strcpy(attrib->array, listaAttrib->array);
                       }
       ;
 
@@ -581,7 +586,7 @@ listaexpr: listaexpr ',' expr {
                                 attrib->local = (char *) malloc((strlen(exprAttrib->local)+1)*sizeof(char));
                                 strcpy(attrib->local, exprAttrib->local);
                                 attrib->ndim = 1;
-                                attrib->code = NULL;
+                                attrib->code = exprAttrib->code;
                                 attrib->desloc = NULL;
                             }
                         }
@@ -701,8 +706,8 @@ expr: expr '+' expr {
     | F_LIT { $$ = create_node(@1.first_line, f_lit_node, $1, NULL); }
     | lvalue { 
                  Code_attrib *attrib, *lvalueAttrib;
-                 struct tac *newCode;
-                 char *arrVar;
+                 struct tac *newCode1, *newCode2;
+                 char *arrVar = "";
                  
                  lvalueAttrib = $1->attribute;
                  if (lvalueAttrib->desloc == NULL) {
@@ -717,9 +722,12 @@ expr: expr '+' expr {
                      attrib->tmpsTotalSize = int_size + lvalueAttrib->tmpsTotalSize;
                      attrib->local = new_tmp();
                      attrib->code = lvalueAttrib->code;
-                     sprintf(arrVar, "%s[%s]", lvalueAttrib->local, lvalueAttrib->desloc);
-                     newCode = create_inst_tac(attrib->local, arrVar, "", "");
-                     append_inst_tac(&(attrib->code), newCode);
+                     newCode1 = create_inst_tac(attrib->local, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
+                     append_inst_tac(&(attrib->code), newCode1);
+                     arrVar = (char *) malloc((strlen(attrib->local)+strlen(lvalueAttrib->array)+2+1)*sizeof(char));
+                     sprintf(arrVar, "%s[%s]", lvalueAttrib->array, attrib->local);
+                     newCode2 = create_inst_tac(attrib->local, arrVar, "", "");
+                     append_inst_tac(&(attrib->code), newCode2);
                  }
              }
     | chamaproc { $$ = $1; }
@@ -830,11 +838,27 @@ expbool: TRUE { $$ = create_node(@1.first_line, true_node, "true", NULL); }
   */
 
 /**
+ * Funcao utilitaria que retorna o numero de digitos de um numero inteiro
+ */
+int num_digits(int n) {
+    int count = 1;
+    int signal = 0;
+    
+    if (n < 0) signal = 1;
+    while (n != 0) {
+        n = n / 10;
+        ++count;
+    }
+    return count + signal;
+}
+
+/**
  * Gera uma nova variavel temporaria e a insere na tabela de simbolos
  */
 char* new_tmp() {
     char *newTmp;
     entry_t *entry;
+    newTmp = (char *) malloc((4+num_digits(tmpNum)+1)*sizeof(char));
     sprintf(newTmp, "@tmp%d", tmpNum);
     tmpNum = tmpNum + 1;
     
@@ -868,6 +892,7 @@ char* c(char *arrayName) {
         exit(UNDEFINED_SYMBOL_ERROR);
     }
     arrInfo = (array_info *) entry->extra;
+    constant = (char *) malloc((num_digits(arrInfo->c)+1)*sizeof(char));
     sprintf(constant, "%d", arrInfo->c);
     return constant;
 }
@@ -886,6 +911,7 @@ char* width(char *arrayName) {
         exit(UNDEFINED_SYMBOL_ERROR);
     }
     arrInfo = (array_info *) entry->extra;
+    elemSize = (char *) malloc((num_digits(arrInfo->width)+1)*sizeof(char));
     sprintf(elemSize, "%d", arrInfo->width);
     return elemSize;
 }
@@ -920,6 +946,7 @@ char* limit(char *arrayName, int dim) {
         printf("Dimensao %d nao encontrada no array %s!\n", dim, arrayName);
         exit(EXIT_FAILURE);
     }
+    dimSize = (char *) malloc((num_digits(currentDim->n)+1)*sizeof(char));
     sprintf(dimSize, "%d", currentDim->n);
     return dimSize;
 }

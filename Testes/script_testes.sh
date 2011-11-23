@@ -6,7 +6,7 @@ make
 cd ../Testes
 rm -f log.txt
 
-for (( i=1; i<=16; i=i+1 ));
+for (( i=1; i<=23; i=i+1 ));
 do
     ../src/pico -o output.tac nm_test$i.pico
     python tac2x86.py output.tac >> log.txt
