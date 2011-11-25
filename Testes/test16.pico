@@ -1,0 +1,4 @@
+int: scalar;
+int(0:0): vec;
+
+print(undeclaaaared[0]);

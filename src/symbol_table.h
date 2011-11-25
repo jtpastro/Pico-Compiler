@@ -24,8 +24,6 @@ typedef struct {
    void* extra; /**< qualquer informacao extra. */
 } entry_t ;
 
-
-
 /** \brief Nodo da lista encadeada de entradas da tabela de simbolos
  *
  * Para cada hash calculado, a tabela de simbolos possui uma lista encadeada.
