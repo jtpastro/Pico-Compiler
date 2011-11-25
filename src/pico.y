@@ -183,7 +183,7 @@ declaracao: tipo ':' listadeclaracao {
                                                      ndim = ndim + 1;
                                                      dimInfo = dimInfo->next;
                                                  }
-                                                 c = deslocVar - c * arrInfo->width;
+                                                 c = - c * arrInfo->width;
                                                  arrInfo->c = c;
                                                  arrInfo->dims = typeAttrib->dims;
                                                  arrInfo->ndim = ndim;

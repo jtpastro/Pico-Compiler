@@ -1,0 +1,5 @@
+int(5:5) : x;
+int : ind;
+ind = 5;
+x[ind] = 10;
+print(x[ind]);

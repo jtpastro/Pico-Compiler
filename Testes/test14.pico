@@ -1,0 +1,11 @@
+int(0:5) : x;
+int : three;
+three = 3;
+
+x[0] = 11;
+x[1] = 2;
+x[2] = 2;
+x[three] = x[three-3];
+x[4] = 2;
+
+print( (x[three-1]*x[three] + x[0]) / (x[4]+1) );
