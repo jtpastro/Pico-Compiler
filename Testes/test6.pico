@@ -1,0 +1,6 @@
+int(3:3, 7:7) : x;
+int : ind, indB;
+ind = 2;
+indB = 10;
+x[ind+1, ind+5] = 10;
+print( x[indB-7, indB-3] );

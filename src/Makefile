@@ -17,7 +17,7 @@ lex.yy.c: scanner.l tokens.h
 tokens.h: y.tab.c
 
 y.tab.c: pico.y
-	yacc -d pico.y ; mv y.tab.h tokens.h
+	yacc -d pico.y -W; mv y.tab.h tokens.h
 
 node.o: node.c node.h
 	$(CC) $(LDFLAGS) -c node.c

@@ -1,0 +1,6 @@
+int(0:4): vec;
+vec[1] = 1;
+vec[2] = 2;
+vec[4] = 4;
+
+print(1 * (vec[2] + vec[4]) / 2);

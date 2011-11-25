@@ -106,23 +106,42 @@ typedef struct _node {
 typedef struct _code_attr {
     int varsTotalSize;
     int tmpsTotalSize;
-    char *local;
-    struct node_tac *code;
+    char* local;
+    struct node_tac* code;
+    char* desloc;
+    char* array;
+    int ndim;
 } Code_attrib;
+
+typedef struct _dim_info {
+    int n;
+    int linf;
+    struct _dim_info *next;
+} Dim_info;
 
 typedef struct _type_attr {
     int type;
     int size;
+    int width;
+    Dim_info *dims;
 } Type_attrib;
 
 typedef struct _idf_attr {
-    char *lexeme;
+    char* lexeme;
     struct _idf_attr *next;
 } Idf_attrib;
 
 typedef struct _list_attr {
     int numElements;
+    Dim_info *dims;
 } List_attrib;
+
+typedef struct {
+    int c;
+    int width;
+    int ndim;
+    Dim_info *dims;
+} array_info;
 
 extern Node * syntax_tree;
 
