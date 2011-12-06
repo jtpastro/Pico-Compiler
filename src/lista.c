@@ -17,7 +17,7 @@ char* idf_to_tac(char *idf);
  * @ return um ponteiro sobre uma 'struct tac'.
  */
 struct tac* create_inst_tac(const char* res,
-        const char* arg1, const char* op, const char* arg2) {
+        const char* arg1, const char* op, const char* arg2, const char* jmp, const char* label) {
     struct tac *newTac = (struct tac *) malloc(sizeof(struct tac));
     
     newTac->op = (char *) malloc((strlen(op)+1)*sizeof(char));
@@ -32,6 +32,12 @@ struct tac* create_inst_tac(const char* res,
     newTac->arg2 = (char *) malloc((strlen(arg2)+1)*sizeof(char));
     strcpy(newTac->arg2, arg2);
 
+    newTac->jmp = (char *) malloc((strlen(jmp)+1)*sizeof(char));
+    strcpy(newTac->jmp, jmp);
+
+    newTac->label = (char *) malloc((strlen(label)+1)*sizeof(char));
+    strcpy(newTac->label, label);
+
     return newTac;
 }
 
@@ -43,13 +49,19 @@ struct tac* create_inst_tac(const char* res,
 void print_inst_tac(FILE* out, struct tac i) {
     if (strcmp(i.op, "PRINT") == 0) { // operacao PRINT
         fprintf(out, "PRINT %s\n", idf_to_tac(i.arg1));
-    } else { // operacoes aritmeticas
-        fprintf(out, "%s := %s", idf_to_tac(i.res), idf_to_tac(i.arg1));
-        if (strlen(i.op) > 0) {
-            fprintf(out, " %s %s", i.op, idf_to_tac(i.arg2));
-        }
-        fprintf(out, "\n");
-    }
+    } else 
+        if(strcmp(i.op, "GOTO") == 0) // operacao GOTO
+	    fprintf(out, "GOTO %s\n", i.label);
+	else
+	   if(strcmp(i.res, "IF") == 0) //condicionais
+	      fprintf(out, "IF %s %s %s GOTO %s\n", idf_to_tac(i.arg1), i.op, idf_to_tac(i.arg2), i.label);
+	   else{ // operacoes aritmeticas
+              fprintf(out, "%s := %s", idf_to_tac(i.res), idf_to_tac(i.arg1));
+              if (strlen(i.op) > 0) {
+              fprintf(out, " %s %s", i.op, idf_to_tac(i.arg2));
+              }
+              fprintf(out, "\n");
+           }
 }
 
 /** \brief Imprime no arquivo apontado por 'out' o conteudo da lista apontada
@@ -70,12 +82,19 @@ void print_inst_tac(FILE* out, struct tac i) {
 void print_tac(FILE* out, struct node_tac * code) {
     struct node_tac *currentNode = code;
     while (currentNode != NULL) {
-        fprintf(out, "%03d:   ", currentNode->number);
-        print_inst_tac(out, *(currentNode->inst));
-        currentNode = currentNode->next;
+        if(strcmp(currentNode->inst->op, "LABEL"))//verdadeiro se for diferente ou se for atribuição
+	{
+           fprintf(out, "%03d:   ", currentNode->number);
+           print_inst_tac(out, *(currentNode->inst));
+           currentNode = currentNode->next;
+	}
+ 	else //Label
+	{
+	   fprintf(out, "%s:\n", currentNode->inst->label);
+    	   currentNode = currentNode->next;
+	}
     }
 }
-
 /** Insere no fim da lista 'code' o elemento 'inst'. 
  * @param code lista (possivelmente vazia) inicial, em entrada. Na saida, contem
  *         a mesma lista, com mais um elemento inserido no fim.
@@ -101,7 +120,10 @@ void append_inst_tac(struct node_tac ** code, struct tac * inst) {
 
         lastNode->next = newCode;
         newCode->prev = lastNode;
-        newCode->number = lastNode->number + 1;
+        if(strcmp(newCode->inst->op, "LABEL")) //verdadeiro se for diferente
+           newCode->number = lastNode->number + 1;
+	else
+	   newCode->number = lastNode->number;
     }
 }
 
@@ -129,8 +151,16 @@ void cat_tac(struct node_tac ** code_a, struct node_tac ** code_b) {
         aux = lastNode->next;
         offset = lastNode->number + 1;
         while (aux != NULL) {
-            aux->number = aux->number + offset;
-            aux = aux->next;
+	    if(strcmp(aux->inst->op, "LABEL")) //verdadeiro se for diferente
+	    {
+               aux->number = aux->number + offset;
+               aux = aux->next;
+	    }
+	    else
+	    {
+	       aux->number = aux->prev->number;
+	       aux = aux->next;
+	    } 
         }
     }
 }
