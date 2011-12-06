@@ -111,6 +111,9 @@ typedef struct _code_attr {
     char* desloc;
     char* array;
     int ndim;
+    char* labelTrue;
+    char* labelFalse;
+    char* labelNext;
 } Code_attrib;
 
 typedef struct _dim_info {
