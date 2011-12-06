@@ -20,11 +20,18 @@
     int deslocVar = 0;
     int deslocTmp = 0;
     
+    int lbTrueNum = 1;
+    int lbFalseNum = 1;
+    int	lbNextNum = 1;
     int tmpNum = 0;
     char* new_tmp();
+    char* new_lb_True();
+    char* new_lb_False();
+    char* new_lb_Next();
     char* c(char *arrayName);
     char* width(char *arrayName);
     char* limit(char *arrayName, int dim);
+    void atributos_herdados(struct node_tac **code);
 %}
 
 %union {
@@ -106,6 +113,7 @@ code: declaracoes acoes {
                             attrib->local = NULL;
                             attrib->code = acoesAttrib->code;
                             
+			    atributos_herdados(&(attrib->code));
                             syntax_tree = $$;
                         }
     | acoes { $$ = $1; syntax_tree = $$; }
@@ -705,6 +713,7 @@ chamaproc: IDF '(' listaexpr ')' {
          ;
 
 enunciado: expr { $$ = $1; }
+
          | IF '(' expbool ')' THEN acoes fiminstcontrole {
                                                              Node *ifNode = create_node(@1.first_line, if_node, "if", NULL);
                                                              Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
@@ -712,7 +721,27 @@ enunciado: expr { $$ = $1; }
                                                              Node *thenNode = create_node(@5.first_line, then_node, "then", NULL);
                                                              $$ = create_node(@1.first_line, enunciado_node, NULL, ifNode, lParNode, $3,
                                                                  rParNode, thenNode, $6, $7, NULL);
+
+				Code_attrib *attrib, *exprAttrib, *acoesAttrib, *endAttrib;
+				struct tac *newCode;
+
+				$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                attrib = (Code_attrib *) $$->attribute;
+                                exprAttrib = $3->attribute;
+				acoesAttrib = $6->attribute;
+				endAttrib = $7->attribute;
+                                   
+                                attrib->local = NULL;
+                                attrib->code = exprAttrib->code;
+				attrib->labelTrue = new_lb_True();
+ 				
+                                newCode = create_inst_tac("", "", "LABEL", "", "", attrib->labelTrue);
+                                append_inst_tac(&(attrib->code), newCode);
+				cat_tac(&(attrib->code), &(acoesAttrib->code));
+				cat_tac(&(attrib->code), &(endAttrib->code));
+				
                                                          }
+
          | WHILE '(' expbool ')' '{' acoes '}' {
                                                    Node *whileNode = create_node(@1.first_line, while_node, "while", NULL);
                                                    Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
@@ -721,7 +750,28 @@ enunciado: expr { $$ = $1; }
                                                    Node *rBraceNode = create_node(@7.first_line, r_brace_node, "}", NULL);
                                                    $$ = create_node(@1.first_line, enunciado_node, NULL, whileNode, lParNode, $3, rParNode,
                                                        lBraceNode, $6, rBraceNode, NULL);
+
+				Code_attrib *attrib, *exprAttrib, *acoesAttrib;
+				struct tac *newCode;
+
+				$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                attrib = (Code_attrib *) $$->attribute;
+                                exprAttrib = $3->attribute;
+				acoesAttrib = $6->attribute;
+                                   
+                                attrib->local = NULL;
+				attrib->code = NULL;
+				attrib->labelNext = new_lb_Next();
+				attrib->labelFalse = new_lb_False();
+ 				
+                                newCode = create_inst_tac("", "", "LABEL", "", "", attrib->labelNext);
+                                append_inst_tac(&(attrib->code), newCode);
+                                cat_tac(&(attrib->code), &(exprAttrib->code));
+				cat_tac(&(attrib->code), &(acoesAttrib->code));
+				newCode = create_inst_tac("", "", "LABEL", "", "", attrib->labelFalse);
+				append_inst_tac(&(attrib->code), newCode);
                                                }
+
          | PRINTF '(' expr ')' {
                                    Node *printNode = create_node(@1.first_line, print_node, "print", NULL);
                                    Node *lParNode = create_node(@2.first_line, l_par_node, "(", NULL);
@@ -737,26 +787,95 @@ enunciado: expr { $$ = $1; }
                                    
                                    attrib->local = NULL;
                                    attrib->code = exprAttrib->code;
-                                   newCode = create_inst_tac("", exprAttrib->local, "PRINT", "");
+                                   newCode = create_inst_tac("", exprAttrib->local, "PRINT", "", "", "");
                                    append_inst_tac(&(attrib->code), newCode);
                                }
          ;
 
-fiminstcontrole: END { $$ = create_node(@1.first_line, end_node, "end", NULL); }
+fiminstcontrole: END { $$ = create_node(@1.first_line, end_node, "end", NULL); 
+			
+			Code_attrib *attrib;
+			struct tac *newCode;
+			char* labelNext;
+			$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                        attrib = (Code_attrib *) $$->attribute;
+
+			labelNext = new_lb_Next();
+			attrib->local = NULL;
+			attrib->code = NULL;
+			newCode = create_inst_tac("", "", "LABEL", "", "", labelNext);
+			append_inst_tac(&(attrib->code), newCode);
+			}
                | ELSE acoes END {
                                     Node *elseNode = create_node(@1.first_line, else_node, "else", NULL);
                                     Node *endNode = create_node(@3.first_line, end_node, "end", NULL);
                                     $$ = create_node(@1.first_line, fiminstcontrole_node, NULL, elseNode, $2, endNode, NULL);
+
+				Code_attrib *attrib, *exprAttrib, *acoesAttrib, *endAttrib;
+				struct tac *newCode;
+
+				$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                                attrib = (Code_attrib *) $$->attribute;
+                                exprAttrib = $2->attribute;
+                                   
+                                attrib->local = NULL;
+                                attrib->code = NULL;
+				attrib->labelFalse = new_lb_False();
+
+				attrib->labelNext = new_lb_Next();
+				newCode = create_inst_tac("", "FALSE", "GOTO", "", "", "");
+				append_inst_tac(&(attrib->code), newCode); 				
+
+                                newCode = create_inst_tac("", "", "LABEL", "", "", attrib->labelFalse);
+                                append_inst_tac(&(attrib->code), newCode);
+				cat_tac(&(attrib->code), &(exprAttrib->code));
+				newCode = create_inst_tac("", "", "LABEL", "", "", attrib->labelNext);
+				append_inst_tac(&(attrib->code), newCode); 
                                 }
                ;
 
-expbool: TRUE { $$ = create_node(@1.first_line, true_node, "true", NULL); }
-       | FALSE { $$ = create_node(@1.first_line, false_node, "false", NULL); }
+expbool: TRUE { $$ = create_node(@1.first_line, true_node, "true", NULL);
+	
+		Code_attrib *attrib;
+		struct tac *newCode;
+
+		$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+		attrib = (Code_attrib *) $$->attribute;
+                   
+                attrib->local = NULL;
+                attrib->code = NULL;
+		newCode = create_inst_tac("", "TRUE","GOTO", "", "", "");
+		append_inst_tac(&(attrib->code), newCode);	
+               }
+
+       | FALSE { $$ = create_node(@1.first_line, false_node, "false", NULL); 
+		
+		Code_attrib *attrib;
+		struct tac *newCode;
+
+		$$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+		attrib = (Code_attrib *) $$->attribute;
+                   
+                attrib->local = NULL;
+                attrib->code = NULL;
+		newCode = create_inst_tac("", "TRUE","GOTO", "", "", "");
+		append_inst_tac(&(attrib->code), newCode);	
+               }
+
        | '(' expbool ')' {
                              Node *lParNode = create_node(@1.first_line, l_par_node, "(", NULL);
                              Node *rParNode = create_node(@3.first_line, r_par_node, ")", NULL);
                              $$ = create_node(@1.first_line, expbool_node, NULL, lParNode, $2, rParNode, NULL);
+
+			     Code_attrib *attrib, *attribExpr;
+			     $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                      	     attrib = (Code_attrib *) $$->attribute;
+                       	     attribExpr = $2->attribute;
+                       
+                       	     attrib->local = NULL;
+                             attrib->code = attribExpr->code;
                          }
+
        | expbool AND expbool {
                                  Node *andNode = create_node(@2.first_line, and_node, "&", NULL);
                                  $$ = create_node(@1.first_line, expbool_node, NULL, $1, andNode, $3, NULL);
@@ -769,29 +888,131 @@ expbool: TRUE { $$ = create_node(@1.first_line, true_node, "true", NULL); }
                          Node *notNode = create_node(@1.first_line, not_node, "!", NULL);
                          $$ = create_node(@1.first_line, expbool_node, NULL, notNode, $2, NULL);
                      }
+
        | expr '>' expr {
                            Node *greaterThanNode = create_node(@2.first_line, greater_than_node, ">", NULL);
                            $$ = create_node(@1.first_line, expbool_node, NULL, $1, greaterThanNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, ">", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                        }
+
        | expr '<' expr {
                            Node *lessThanNode = create_node(@2.first_line, less_than_node, "<", NULL);
                            $$ = create_node(@1.first_line, expbool_node, NULL, $1, lessThanNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, "<", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                        }
+
        | expr LE expr {
                           Node *lessOrEqualNode = create_node(@2.first_line, le_node, "<=", NULL);
                           $$ = create_node(@1.first_line, expbool_node, NULL, $1, lessOrEqualNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, "<=", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                       }
+
        | expr GE expr {
                           Node *greaterOrEqualNode = create_node(@2.first_line, ge_node, ">=", NULL);
                           $$ = create_node(@1.first_line, expbool_node, NULL, $1, greaterOrEqualNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, ">=", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                       }
+
        | expr EQ expr {
                           Node *equalsNode = create_node(@2.first_line, eq_node, "==", NULL);
                           $$ = create_node(@1.first_line, expbool_node, NULL, $1, equalsNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, "==", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                       }
+
        | expr NE expr {
-                          Node *notEqualNode = create_node(@2.first_line, ne_node, "<>", NULL);
+                          Node *notEqualNode = create_node(@2.first_line, ne_node, "!=>", NULL);
                           $$ = create_node(@1.first_line, expbool_node, NULL, $1, notEqualNode, $3, NULL);
+
+			   Code_attrib *attrib, *expr1, *expr2;
+                           struct tac *newCode;
+				
+			   $$->attribute = (Code_attrib *) malloc(sizeof(Code_attrib));
+                           attrib = (Code_attrib *) $$->attribute;
+                           expr1 = $1->attribute;
+                           expr2 = $3->attribute;
+                        
+                           attrib->local = NULL;
+                           attrib->code = expr1->code;
+                           cat_tac(&(attrib->code), &(expr2->code));
+                           newCode = create_inst_tac("IF", expr1->local, "!=", expr2->local, "GOTO", "");
+                           append_inst_tac(&(attrib->code), newCode);
+			   newCode = create_inst_tac("", "FALSE","GOTO", "", "", "");
+			   append_inst_tac(&(attrib->code), newCode);
                       }
        ;
 %%
@@ -838,6 +1059,40 @@ char* new_tmp() {
 
     return newTmp;
 }
+
+/**
+ * Gera um novo rótulo NEXT
+ */
+char* new_lb_Next() {
+    char *newLbNext;
+    newLbNext = (char *) malloc((4+num_digits(lbNextNum)+1)*sizeof(char));
+    sprintf(newLbNext, "NEXT%d", lbNextNum);
+    lbNextNum = lbNextNum + 1;
+    return newLbNext;
+}
+
+/**
+ * Gera um novo rótulo TRUE
+ */
+char* new_lb_True() {
+    char *newLbTrue;
+    newLbTrue = (char *) malloc((4+num_digits(lbTrueNum)+1)*sizeof(char));
+    sprintf(newLbTrue, "TRUE%d", lbTrueNum);
+    lbTrueNum = lbTrueNum + 1;
+    return newLbTrue;
+}
+
+/**
+ * Gera um novo rótulo FALSE
+ */
+char* new_lb_False() {
+    char *newLbFalse;
+    newLbFalse = (char *) malloc((4+num_digits(lbFalseNum)+1)*sizeof(char));
+    sprintf(newLbFalse, "FALSE%d", lbFalseNum);
+    lbFalseNum = lbFalseNum + 1;
+    return newLbFalse;
+}
+
 
 /**
  * Retorna a constante c usada no cálculo de endereço de um elemento de array
@@ -910,4 +1165,152 @@ char* limit(char *arrayName, int dim) {
     dimSize = (char *) malloc((num_digits(currentDim->n)+1)*sizeof(char));
     sprintf(dimSize, "%d", currentDim->n);
     return dimSize;
+}
+
+/*
+ * atribui os atributos herdados as instruções tac
+ */
+void atributos_herdados(struct node_tac ** code)
+{
+    struct node_tac *aux2, *trueList, *falseList, *nextList;
+    char labelName[6], lb_aux[15];
+    int i;
+    trueList = NULL;
+    falseList = NULL;
+    nextList = NULL;
+    while((*code)->next != NULL) //atribui último elemento do código a aux
+	{
+	    aux2 = *code;
+	    *code = (*code)->next;
+	    (*code)->prev = aux2;
+	}
+
+    while((*code)->prev != NULL) //volta para começo da lista
+    {
+      if((*code)->inst->op != NULL)
+      {
+	if(!strcmp((*code)->inst->op,"LABEL")) //instrução é um label
+	{
+	    i = 0;
+	    strcpy(lb_aux, (*code)->inst->label);
+	    printf("label encontrada: %s\n", lb_aux);
+	    while('A' <= lb_aux[i] && lb_aux[i] <= 'Z') //pega apenas o tipo de label (TRUE, FALSE, NEXT)
+	    {
+		labelName[i] = lb_aux[i];
+		++i;
+	    }
+	    labelName[i] = '\0';
+	    if(!strcmp(labelName,"TRUE"))//label TRUE encontrado
+	    {
+		printf("truelist\n");
+		if(trueList == NULL)
+		{
+		    trueList = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    trueList->inst = (*code)->inst; //lista vazia, adiciona elemento
+		    trueList->next = NULL;
+		    trueList->prev = NULL;
+		}
+		else  //adiciona no começo da lista
+		{
+		    struct node_tac *aux;
+		    aux = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    aux->inst = (*code)->inst;
+		    aux->prev = NULL;
+		    aux->next = trueList;
+		    trueList->prev = aux;
+		    trueList = aux;
+		}
+	    }
+	    else
+	    	if(!strcmp(labelName,"FALSE"))//label FALSE encontrado
+	    	{
+			printf("falselist\n");
+		    if(falseList == NULL)
+		    {
+			falseList = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    	falseList->inst = (*code)->inst; //lista vazia, adiciona elemento
+		    	falseList->next = NULL;
+		    	falseList->prev = NULL;
+		    }
+		    else  //adiciona no começo da lista
+		    {
+			struct node_tac *aux;
+		    	aux = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    	aux->inst = (*code)->inst;
+			aux->prev = NULL;
+			aux->next = falseList;
+		    	falseList->prev = aux;
+			falseList = aux;
+		    }
+	    	}
+	        else
+	    	    if(!strcmp(labelName,"NEXT"))//label NEXT encontrado
+		    {
+			printf("nextlist\n");
+			if(nextList == NULL)
+			{
+			    nextList = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    	    nextList->inst = (*code)->inst; //lista vazia, adiciona elemento
+		    	    nextList->next = NULL;
+		    	    nextList->prev = NULL;
+			printf("label inserida: %s\n", nextList->inst->label);
+			}
+		        else  //adiciona no começo da lista
+		        {
+			    printf("nextlist com elemento\n");
+		    	    struct node_tac *aux;
+		    	    aux = (struct node_tac *)malloc(sizeof(struct node_tac));
+		    	    aux->inst = (*code)->inst;
+			    aux->prev = NULL;
+			    aux->next = nextList;
+		    	    nextList->prev = aux;
+			    nextList = aux;
+		    	}
+		    }
+	}
+	if(!strcmp((*code)->inst->res,"IF")) //se instrução é IF, recebe label TRUE
+	{
+	    printf("IF encontrado\n");
+	    (*code)->inst->label = trueList->inst->label; //recebe label
+	    trueList = trueList->next; //remove da lista
+	    if(trueList != NULL)
+	    	trueList->prev = NULL;
+	}
+	else
+	    if(!strcmp((*code)->inst->op,"GOTO"))
+	    {
+		printf("GOTO encontrado para %s\n", (*code)->inst->arg1);
+		if(!strcmp((*code)->inst->arg1,"TRUE")) // GOTO TRUE
+		{
+		    printf("truelist label: %s\n", trueList->inst->label);
+		    (*code)->inst->label = trueList->inst->label; //recebe label
+	    	    trueList = trueList->next; //retira da lista
+	    	    trueList->prev = NULL;
+		}
+		else
+		    if(!strcmp((*code)->inst->arg1,"FALSE")) 
+		    {
+			if(falseList != NULL) // GOTO FALSE
+			{
+			    (*code)->inst->label = falseList->inst->label; //recebe label
+	    		    falseList = falseList->next; //retira da lista
+			    if(falseList != NULL)
+	    		    	falseList->prev = NULL;
+		        }
+			else // GOTO NEXT
+			{
+			    (*code)->inst->label = nextList->inst->label; //recebe label
+	    		    nextList = nextList->next; //retira da lista
+			    if(nextList != NULL)
+	    			nextList->prev = NULL;
+			    printf("GOTO %s\n", (*code)->inst->label);
+			}
+		    }
+	    }
+      }
+	aux2 = *code;
+        *code = (*code)->prev;
+	(*code)->next = aux2;
+	printf("fim while\n");
+    }
 }
