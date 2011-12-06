@@ -15,6 +15,8 @@ struct tac {
    char* res;  /* "TMP100" */
    char* arg1; /* "TMP0"   */
    char* arg2; /* "TMP1"   */
+   char* jmp;  /* "GOTO"   */
+   char* label;/* "NEXT1"  */
 };
 
 /** \brief  Construtor de Instrucao TAC 
@@ -27,7 +29,7 @@ struct tac {
  * @ return um ponteiro sobre uma 'struct tac'.
  */
 struct tac* create_inst_tac(const char* res, const char* arg1, 
-                 const char* op, const char* arg2);
+                 const char* op, const char* arg2, const char* jmp, const char* label);
 
 /** \brief Funcao que imprime o conteudo de uma instrucao TAC 
  *
