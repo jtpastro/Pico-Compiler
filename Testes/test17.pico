@@ -1,0 +1,15 @@
+int(0:5) : vetor;
+int: x, y;
+
+vetor[0] = 2;
+vetor[1] = 4;
+x = 9;
+y = 17;
+
+if( vetor[0] + 5 > vetor[1] + 4) then x = y;
+end;
+
+print(vetor[0]);
+print(vetor[1]);
+print(x);
+print(y);

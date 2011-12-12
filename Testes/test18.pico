@@ -1,0 +1,14 @@
+int: x, y;
+
+x = 9;
+y = 9;
+
+if(x == y) then
+y = y + x;
+if (y > x) then
+print(y);
+end;
+else
+y = 0;
+end;
+

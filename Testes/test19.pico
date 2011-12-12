@@ -1,0 +1,17 @@
+int: x, y;
+x = 11;
+y = 10;
+
+if (x > y) then
+y = 19;
+if (x > y) then
+x = 19;
+else
+x = 0;
+end;
+else
+y = 19;
+end;
+
+print(x);
+print(y);

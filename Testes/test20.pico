@@ -1,0 +1,11 @@
+int: x, y;
+x = 10;
+y = 10;
+
+while (x > 0){
+print(y);
+x = x - 1;
+y = y + 1;
+};
+
+print(y);

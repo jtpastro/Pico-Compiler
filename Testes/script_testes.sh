@@ -5,7 +5,7 @@ make clean
 make
 cd ../Testes
 
-for (( i=0; i<=16; i=i+1 ));
+for (( i=0; i<=20; i=i+1 ));
 do
     ../src/pico -o output.tac test$i.pico
     python tac2x86.py output.tac >> /dev/null
@@ -15,3 +15,4 @@ do
     echo
     rm -f output.tac output.s output.o output
 done
+
