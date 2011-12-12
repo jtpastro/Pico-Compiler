@@ -465,16 +465,16 @@ comando: lvalue '=' expr {
                              attrib->code = lvalueAttrib->code;
                              cat_tac(&(attrib->code), &(exprAttrib->code));
                              if (lvalueAttrib->desloc == NULL) {
-                                 newCode = create_inst_tac(lvalueAttrib->local, exprAttrib->local, "", "");
+                                 newCode = create_inst_tac(lvalueAttrib->local, exprAttrib->local, "", "", "", "");
                                  append_inst_tac(&(attrib->code), newCode);
                              } else {
                                  struct tac *newCode1, *newCode2;
                                  char* tmp = new_tmp();
-                                 newCode1 = create_inst_tac(tmp, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
+                                 newCode1 = create_inst_tac(tmp, lvalueAttrib->local, "ADD", lvalueAttrib->desloc, "", "");
                                  append_inst_tac(&(attrib->code), newCode1);
                                  arrVar = (char *) malloc((strlen(tmp)+strlen(lvalueAttrib->array)+2+1)*sizeof(char));
                                  sprintf(arrVar, "%s[%s]", lvalueAttrib->array, tmp);
-                                 newCode2 = create_inst_tac(arrVar, exprAttrib->local, "", "");
+                                 newCode2 = create_inst_tac(arrVar, exprAttrib->local, "", "", "", "");
                                  append_inst_tac(&(attrib->code), newCode2);
                              }
                          }
@@ -513,9 +513,9 @@ lvalue: IDF {
                           attrib->local = new_tmp();
                           attrib->desloc = new_tmp();
                           attrib->code = listaAttrib->code;
-                          newCode1 = create_inst_tac(attrib->local, c(listaAttrib->array), "", "");
+                          newCode1 = create_inst_tac(attrib->local, c(listaAttrib->array), "", "", "", "");
                           append_inst_tac(&(attrib->code), newCode1);
-                          newCode2 = create_inst_tac(attrib->desloc, listaAttrib->local, "MUL", width(listaAttrib->array));
+                          newCode2 = create_inst_tac(attrib->desloc, listaAttrib->local, "MUL", width(listaAttrib->array), "", "");
                           append_inst_tac(&(attrib->code), newCode2);
                           attrib->array = (char *) malloc((strlen(listaAttrib->array)+1)*sizeof(char));
                           strcpy(attrib->array, listaAttrib->array);
@@ -542,10 +542,10 @@ listaexpr: listaexpr ',' expr {
                                   attrib->code = listaAttrib->code;
                                   cat_tac(&(attrib->code), &(exprAttrib->code));
                                   
-                                  newCode1 = create_inst_tac(tmp, listaAttrib->local, "MUL", limit(listaAttrib->array, m));
+                                  newCode1 = create_inst_tac(tmp, listaAttrib->local, "MUL", limit(listaAttrib->array, m), "", "");
                                   append_inst_tac(&(attrib->code), newCode1);
                                   
-                                  newCode2 = create_inst_tac(tmp, tmp, "ADD", exprAttrib->local);
+                                  newCode2 = create_inst_tac(tmp, tmp, "ADD", exprAttrib->local, "", "");
                                   append_inst_tac(&(attrib->code), newCode2);
                                   
                                   attrib->array = (char *) malloc((strlen(listaAttrib->array)+1)*sizeof(char));
@@ -594,7 +594,7 @@ expr: expr '+' expr {
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
-                        newCode = create_inst_tac(attrib->local, expr1->local, "ADD", expr2->local);
+                        newCode = create_inst_tac(attrib->local, expr1->local, "ADD", expr2->local, "", "");
                         append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '-' expr {
@@ -612,7 +612,7 @@ expr: expr '+' expr {
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
-                        newCode = create_inst_tac(attrib->local, expr1->local, "SUB", expr2->local);
+                        newCode = create_inst_tac(attrib->local, expr1->local, "SUB", expr2->local, "", "");
                         append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '*' expr {
@@ -630,7 +630,7 @@ expr: expr '+' expr {
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
-                        newCode = create_inst_tac(attrib->local, expr1->local, "MUL", expr2->local);
+                        newCode = create_inst_tac(attrib->local, expr1->local, "MUL", expr2->local, "", "");
                         append_inst_tac(&(attrib->code), newCode);
                     }
     | expr '/' expr {
@@ -648,7 +648,7 @@ expr: expr '+' expr {
                         attrib->local = new_tmp();
                         attrib->code = expr1->code;
                         cat_tac(&(attrib->code), &(expr2->code));
-                        newCode = create_inst_tac(attrib->local, expr1->local, "DIV", expr2->local);
+                        newCode = create_inst_tac(attrib->local, expr1->local, "DIV", expr2->local, "", "");
                         append_inst_tac(&(attrib->code), newCode);
                     }
     | '(' expr ')' {
@@ -695,7 +695,7 @@ expr: expr '+' expr {
                      
                      attrib->local = new_tmp();
                      attrib->code = lvalueAttrib->code;
-                     newCode1 = create_inst_tac(attrib->local, lvalueAttrib->local, "ADD", lvalueAttrib->desloc);
+                     newCode1 = create_inst_tac(attrib->local, lvalueAttrib->local, "ADD", lvalueAttrib->desloc, "", "");
                      append_inst_tac(&(attrib->code), newCode1);
                      arrVar = (char *) malloc((strlen(attrib->local)+strlen(lvalueAttrib->array)+2+1)*sizeof(char));
                      sprintf(arrVar, "%s[%s]", lvalueAttrib->array, attrib->local);
